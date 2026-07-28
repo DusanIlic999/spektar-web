@@ -1,0 +1,10 @@
+export { default as HomePage } from "./HomePage.tsx";
+export { default as ChatPage } from "./ChatPage.tsx";
+export { default as NotificationPage } from "./NotificationPage.tsx";
+export { default as SavedPage } from "./SavedPage.tsx";
+export { default as SearchPage } from "./SearchPage.tsx";
+export { default as SettingsPage } from "./SettingsPage.tsx";
+export { default as TrandingPage } from "./TrandingPage.tsx";
+export { default as CreateCommunityFormPage } from "./CreateCommunityFormPage.tsx";
+export { default as CommunitesPage } from "./CommunitesPage.tsx";
+export { default as CommunityPage } from "./CommunityPage.tsx";
