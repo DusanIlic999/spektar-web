@@ -1,9 +1,10 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Form, Input, Row } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { useState } from "react";
 import { toast } from "../lib/toast";
 import { apiClient } from "../api/client";
+import { useNavigate } from "react-router-dom";
 
 interface ICreateCommunity {
   name: string;
@@ -16,12 +17,16 @@ export default function CreateCommunityFormPage() {
   const [form] = useForm();
   const [category, setCategory] = useState("neightborhood");
   const [type, setType] = useState("public");
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
     mutationFn: (obj: ICreateCommunity) => apiClient.post("/communities", obj),
     onSuccess: () => {
       toast.success("Zajednica kreirana", "Uspesno ste kreirali zajednicu!");
       form.resetFields();
+      navigate("/communities");
+      queryClient.invalidateQueries({ queryKey: ["communities"] });
     },
     onError: () =>
       toast.error(

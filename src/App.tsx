@@ -36,6 +36,12 @@ const CommunitesPage = lazy(() =>
 const CommunityPage = lazy(() =>
   import("./pages").then((module) => ({ default: module.CommunityPage })),
 );
+const PostPage = lazy(() =>
+  import("./pages").then((module) => ({ default: module.PostPage })),
+);
+const Profile = lazy(() =>
+  import("./pages").then((module) => ({ default: module.Profile })),
+);
 
 function App() {
   return (
@@ -64,6 +70,8 @@ function App() {
             path="/community/:slug"
             element={<CommunityPage />}
           ></Route>
+          <Route index path="/post/:id" element={<PostPage />}></Route>
+          <Route index path="/profile" element={<Profile />}></Route>
         </Route>
       </Routes>
     </Suspense>

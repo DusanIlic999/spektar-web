@@ -8,3 +8,5 @@ export { default as TrandingPage } from "./TrandingPage.tsx";
 export { default as CreateCommunityFormPage } from "./CreateCommunityFormPage.tsx";
 export { default as CommunitesPage } from "./CommunitesPage.tsx";
 export { default as CommunityPage } from "./CommunityPage.tsx";
+export { default as PostPage } from "./PostPage.tsx";
+export { default as Profile } from "./Profile.tsx";

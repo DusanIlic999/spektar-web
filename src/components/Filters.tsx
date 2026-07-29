@@ -1,29 +1,39 @@
-export const Filters = () => {
+import type { TPostStatus } from "../pages/HomePage";
+import { POSTTYPE, TYPE_LABELS, type TPostTypeFilter } from "../types/post";
+
+export const Filters = ({
+  postType,
+  setPostType,
+  setStatus,
+}: {
+  postType: TPostTypeFilter;
+  setPostType: (type: TPostTypeFilter) => void;
+  setStatus: (status: TPostStatus) => void;
+}) => {
   return (
     <div className="w-full p-2 rounded-xl bg-black/60 border border-white/15 flex justify-between px-5 items-center">
-      <div className="flex gap-5 items-center">
-        <div className="px-5 py-1 bg-green-400/40 rounded-lg cursor-pointer select-none">
-          Svi
-        </div>
-        <div className="cursor-pointer select-none text-gray-400">
-          Diskusije
-        </div>
-        <div className="cursor-pointer select-none text-gray-400">Pitanja</div>
-        <div className="cursor-pointer select-none text-gray-400">
-          Dogadjaji
-        </div>
-        <div className="cursor-pointer select-none text-gray-400">
-          Preporuke
-        </div>
-        <div className="cursor-pointer select-none text-gray-400">
-          Obavestenja
-        </div>
+      <div className="flex gap-1 items-center">
+        {(["all", ...Object.values(POSTTYPE)] as TPostTypeFilter[]).map(
+          (value) => (
+            <div
+              className={`cursor-pointer select-none text-gray-400 px-5 py-1 ${postType === value && "bg-green-400/40 rounded-lg text-white"}`}
+              onClick={() => setPostType(value)}
+            >
+              {value === "all" ? "Sve" : TYPE_LABELS[value]}
+            </div>
+          ),
+        )}
       </div>
       <div>
-        <select name="" id="" className="dd">
-          <option value="">Najnovije</option>
-          <option value="">Trending</option>
-          <option value="">Najstarije</option>
+        <select
+          className="dd"
+          onChange={(e) => {
+            setStatus(e.target.value as TPostStatus);
+          }}
+        >
+          <option value="newest">Najnovije</option>
+          <option value="tranding">Trending</option>
+          <option value="oldest">Najstarije</option>
         </select>
       </div>
     </div>

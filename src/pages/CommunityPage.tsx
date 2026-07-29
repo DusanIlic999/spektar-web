@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { apiClient } from "../api/client";
 import { Spinner } from "../components/Spinner";
 import { useModal } from "../context/moda.context.use";
@@ -7,13 +7,13 @@ import { CreatePostForm } from "../components/CreatePostForm";
 import { IoClose } from "react-icons/io5";
 import { CommunityHeader } from "../components/CommunityHeader";
 import { PostList } from "../components/PostList";
+import { IoIosArrowBack } from "react-icons/io";
 
 export default function CommunityPage() {
   const { openModal, closeModal } = useModal();
   const { slug } = useParams();
   const queryClient = useQueryClient();
-
-  console.log("rerender")
+  const navigate = useNavigate();
 
   const { data, isFetching, isError } = useQuery({
     queryKey: ["community", slug],
@@ -75,32 +75,31 @@ export default function CommunityPage() {
   };
 
   return (
-    <div className="text-white w-full bg-black/80 rounded-2xl">
-      {isFetching ||
-      !data ||
-      isFetchingMembers ||
-      !members ? (
-        <Spinner />
-      ) : (
-        <>
-          <CommunityHeader
-            community={data.data}
-            memberCount={members.data.length}
-            onImageChange={(file) => uploadImageMutation.mutate(file)}
-          />
-          <div className="p-5 w-full space-y-5">
-            <div className="w-full flex justify-end">
-              <button
-                className="bg-green-800 px-3 py-2 rounded-xl cursor-pointer font-semibold select-none"
-                onClick={handleOpenModal}
-              >
-                Objavi
-              </button>
+    <div className="flex flex-col w-full text-white  gap-3">
+      <div
+        className="flex items-center gap-1 cursor-pointer"
+        onClick={() => navigate(-1)}
+      >
+        <IoIosArrowBack />
+        Back
+      </div>
+      <div className="text-white w-full h-fit pb-5 rounded-2xl">
+        {isFetching || !data || isFetchingMembers || !members ? (
+          <Spinner />
+        ) : (
+          <>
+            <CommunityHeader
+              community={data.data}
+              memberCount={members.data.length}
+              onImageChange={(file) => uploadImageMutation.mutate(file)}
+              handleOpenModal={handleOpenModal}
+            />
+            <div className="p-5 w-full space-y-5">
+              <PostList />
             </div>
-            <PostList />
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

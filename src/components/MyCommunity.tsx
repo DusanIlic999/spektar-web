@@ -1,6 +1,22 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { apiClient } from "../api/client";
+import type { IArrayData } from "../types/api";
+import type { ICommunity } from "../types/community";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 
 export const MyCommunity = () => {
+  const navigate = useNavigate();
+
+  const { data } = useQuery<IArrayData<ICommunity>>({
+    queryKey: ["my-communities"],
+    queryFn: () => apiClient.get("/communities/me"),
+  });
+
+  const myCommunities = useMemo(() => {
+    return data?.data.slice(0, 5);
+  }, [data]);
+
   return (
     <div className="text-white min-w-65 bg-black/60 h-fit p-5 rounded-2xl border border-white/15 text-sm">
       <div className="border-b border-white/10 pb-2.5 flex justify-between items-center">
@@ -11,6 +27,14 @@ export const MyCommunity = () => {
         >
           +
         </Link>
+      </div>
+      <div className="flex flex-col gap-2 my-2">
+        {myCommunities &&
+          myCommunities.map((community: ICommunity) => (
+            <div className="py-1 cursor-pointer" onClick={()=> {
+              navigate(`/community/${community.slug}`);
+            }}>{community.name}</div>
+          ))}
       </div>
       <Link
         to={"/communities"}

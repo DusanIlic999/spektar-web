@@ -6,16 +6,36 @@ interface IAuthor {
   id: string;
 }
 
+export const POSTTYPE = {
+  ANNOUNCEMENT: "announcement",
+  GUIDE: "guide",
+  EVENT: "event",
+  DISCUSSION: "discussion",
+  PHOTO: "photo",
+} as const;
+
+export type TPostType = (typeof POSTTYPE)[keyof typeof POSTTYPE];
+
 export interface IPost {
   author: IAuthor;
-  commmunity: ICommunity;
+  community: ICommunity;
   content: string;
   createdAt: string;
   downvoteCount: number;
   id: string;
   imageUrl: string;
   title: string;
-  type: string;
+  type: TPostType;
   updatedAt: string;
   upvoteCount: number;
 }
+
+export const TYPE_LABELS: Record<TPostType, string> = {
+  [POSTTYPE.ANNOUNCEMENT]: "Objava",
+  [POSTTYPE.DISCUSSION]: "Diskusija",
+  [POSTTYPE.EVENT]: "Dogadjaj",
+  [POSTTYPE.GUIDE]: "Vodic",
+  [POSTTYPE.PHOTO]: "Fotografija",
+};
+
+export type TPostTypeFilter = TPostType | "all";

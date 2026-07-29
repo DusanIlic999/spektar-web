@@ -107,7 +107,7 @@ export const CreatePostForm = ({
             name="title"
             rules={[{ required: true, message: "Naslov je obavezan" }]}
           >
-            <Input className="w-115!" placeholder="Title..." />
+            <Input className="w-130!" placeholder="Title..." />
           </Form.Item>
         </Row>
         <Row justify={"start"}>
@@ -117,7 +117,7 @@ export const CreatePostForm = ({
             rules={[{ required: true, message: "Sadrzaj je obavezan" }]}
           >
             <Input.TextArea
-              className="w-115!"
+              className="w-130!"
               placeholder="Content..."
               rows={3}
               maxLength={125}
@@ -165,7 +165,7 @@ export const CreatePostForm = ({
           <Form.Item
             label={<span className="text-white">Slika (opciono)</span>}
           >
-            <div className="w-115! h-40 mt-1 bg-black/50 relative">
+            <div className="w-130! h-40 mt-1 bg-black/50 relative">
               <input
                 ref={inputRef}
                 type="file"
@@ -178,7 +178,7 @@ export const CreatePostForm = ({
                   <img
                     src={preview}
                     alt="preview"
-                    className="w-115! h-40 relative -top-8 object-cover rounded-xl"
+                    className="w-130! h-40 relative -top-8 object-cover rounded-xl"
                   />
                   <button
                     type="button"

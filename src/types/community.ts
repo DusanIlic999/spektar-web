@@ -8,4 +8,6 @@ export interface ICommunity {
   slug: string;
   type: string;
   updatedAt: string;
+  memberCount: number;
+  postCount: number;
 }

@@ -3,8 +3,9 @@ import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../api/client";
 import type { IPost } from "../types/post";
+import { PiMailboxLight } from "react-icons/pi";
 
-interface UpVotePayload {
+export interface UpVotePayload {
   id: string;
 }
 export const PostList = () => {
@@ -45,14 +46,26 @@ export const PostList = () => {
 
   return (
     <>
-      {data && data.data.map((post: IPost) => (
-        <PostCard
-          key={post.id}
-          post={post}
-          onUpvote={() => upVoteMutation.mutate({ id: post.id })}
-          onDownvote={() => downVoteMutation.mutate({ id: post.id })}
-        />
-      ))}
+      {data && data.data.length ? (
+        data.data.map((post: IPost) => (
+          <PostCard
+            key={post.id}
+            post={post}
+            onUpvote={() => upVoteMutation.mutate({ id: post.id })}
+            onDownvote={() => downVoteMutation.mutate({ id: post.id })}
+          />
+        ))
+      ) : (
+        <div className="flex flex-col items-center mt-5">
+          <div className="p-4 bg-gray-700/50 w-fit rounded-2xl">
+            <PiMailboxLight size="40" />
+          </div>
+          <div className="font-bold text-lg">Nema Objava</div>
+          <div className="text-sm text-gray-400">
+            Budi prvi koji ce nesto objaviti!
+          </div>{" "}
+        </div>
+      )}
     </>
   );
 };

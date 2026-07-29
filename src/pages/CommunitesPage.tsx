@@ -1,18 +1,43 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../api/client";
-import { Spinner } from "../components/Spinner";
 import { CommunityCard } from "../components/CommunityCard";
 import type { ICommunity } from "../types/community";
 import { useNavigate } from "react-router-dom";
+import { type IArrayData } from "../types/api";
+import { useMemo, useState } from "react";
+import { useDebounce } from "../lib/useDebounce";
 
 export default function CommunitesPage() {
   const navigate = useNavigate();
+  const [search, setSearch] = useState<string>("");
+  const debounce = useDebounce(search, 600);
 
-  const { data, isFetching, isError } = useQuery({
+  const { data, isFetching, isError } = useQuery<IArrayData<ICommunity>>({
     queryKey: ["communities"],
     queryFn: () => apiClient.get("/communities"),
   });
-  
+
+  const { data: myCommunities } = useQuery<IArrayData<ICommunity>>({
+    queryKey: ["my-communities"],
+    queryFn: () => apiClient.get("/communities/me"),
+  });
+
+  const isMemberOfCommunity = (currentCommunity: ICommunity) => {
+    return myCommunities?.data.some(
+      (my: ICommunity) => my.id === currentCommunity.id,
+    );
+  };
+
+  const filteredCommunities = useMemo(() => {
+    if (debounce.length > 0) {
+      return data?.data.filter((community: ICommunity) =>
+        community.name.toLowerCase().includes(debounce?.toLowerCase().trim()),
+      );
+    } else {
+      return data?.data;
+    }
+  }, [debounce]);
+
   if (isError) {
     return (
       <div className="w-full p-5 bg-black/80 space-y-5 text-white rounded-2xl">
@@ -33,17 +58,28 @@ export default function CommunitesPage() {
           Kreiraj zajednicu
         </button>
       </div>
-      {isFetching ? (
-        <Spinner />
-      ) : (
-        <div className="pt-5 flex flex-wrap justify-center gap-5">
-          {data &&
-            data.data &&
-            data.data.map((item: ICommunity) => (
-              <CommunityCard community={item} key={item.id} />
-            ))}
-        </div>
-      )}
+      <div className="my-3 mt-5">
+        <input
+          className="px-2 py-1 w-full border rounded-md"
+          placeholder="Pretrazi zajednice..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value as string)}
+        />
+      </div>
+      <div className="pt-5 flex flex-wrap justify-center gap-5">
+        {filteredCommunities &&
+          filteredCommunities.map((item: ICommunity) => {
+            console.log(item);
+            const isMember = isMemberOfCommunity(item);
+            return (
+              <CommunityCard
+                community={item}
+                key={item.id}
+                isMember={isMember as boolean}
+              />
+            );
+          })}
+      </div>
     </div>
   );
 }
