@@ -6,13 +6,22 @@ import { IoPersonOutline } from "react-icons/io5";
 import type { IPost } from "../types/post";
 import { PostCard } from "../components/PostCard";
 import type { UpVotePayload } from "../components/PostList";
+import { useNavigate, useParams } from "react-router-dom";
+import { IoIosArrowBack } from "react-icons/io";
+import { userStorage } from "../lib/userStorage";
+import { useAuthStore } from "../store/authStore";
 
 export default function Profile() {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { username } = useParams();
+
+  const token = useAuthStore((s) => s.token);
+  const isCurrentUser = userStorage.get();
 
   const { data } = useQuery<IData<IUser>>({
-    queryKey: ["user"],
-    queryFn: () => apiClient.get("/users/me"),
+    queryKey: ["user", username],
+    queryFn: () => apiClient.get(username ? `/users/${username}` : "/users/me"),
   });
 
   const upVoteMutation = useMutation({
@@ -35,21 +44,58 @@ export default function Profile() {
 
   return (
     <div className="w-full h-fit text-white p-5">
-      <div className="flex gap-5 bg-black/80 p-5 rounded-2xl border border-white/15">
-        {data?.data.avatarUrl ? (
-          <div>
-            <img src={data?.data.avatarUrl} />
+      <div
+        className="flex items-center gap-1 cursor-pointer mb-2"
+        onClick={() => navigate(-1)}
+      >
+        <IoIosArrowBack />
+        Back
+      </div>
+      <div className="flex gap-5 bg-black/80 p-5 rounded-2xl border border-white/15 justify-between">
+        <div className="flex flex-col gap-2 w-full">
+          <div className="flex gap-10">
+            {data?.data.avatarUrl && data.data.avatarUrl.length > 0 ? (
+              <div>
+                <img
+                  src={data?.data.avatarUrl}
+                  className="h-30 w-30 rounded-full"
+                />
+              </div>
+            ) : (
+              <div className="w-30 h-30 bg-gray-500 rounded-full flex items-center justify-center">
+                <IoPersonOutline size={55} />
+              </div>
+            )}
+            <div className="pt-5">{data?.data.bio}</div>
           </div>
-        ) : (
-          <div className="w-30 h-30 bg-gray-500 rounded-full flex items-center justify-center">
-            <IoPersonOutline size={55} />
+          <div className="flex justify-between w-full items-center">
+            <div>
+              <h3 className="text-xl font-semibold">
+                {data?.data.displayName}
+              </h3>
+              <p>
+                {data?.data.username}{" "}
+                {token && <span>&middot; {data?.data.email}</span>}
+              </p>
+            </div>
+            {token && isCurrentUser === data?.data.username && (
+              <div className="self-end flex gap-2">
+                <button
+                  className="px-3 py-1 bg-green-800 border border-green-400 rounded-lg cursor-pointer"
+                  onClick={() =>
+                    navigate("/profile/edit", {
+                      state: { user: data?.data },
+                    })
+                  }
+                >
+                  Edit
+                </button>
+                <button className="px-3 py-1 bg-red-500 border border-red-400 rounded-lg cursor-pointer">
+                  Delete
+                </button>
+              </div>
+            )}
           </div>
-        )}
-        <div>
-          <h3 className="text-xl font-semibold">{data?.data.displayName}</h3>
-          <p>
-            {data?.data.username} &middot; {data?.data.email}
-          </p>
         </div>
       </div>
       <div className="mt-5 flex flex-col gap-3">

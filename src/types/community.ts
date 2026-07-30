@@ -10,4 +10,5 @@ export interface ICommunity {
   updatedAt: string;
   memberCount: number;
   postCount: number;
+  currentMember: boolean;
 }

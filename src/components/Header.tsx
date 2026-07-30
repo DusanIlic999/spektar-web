@@ -21,7 +21,7 @@ export const Header = () => {
     return openModal(
       <div className="space-y-5">
         <div className="flex justify-between">
-          <h2 className="text-2xl">
+          <h2 className="text-2xl text-green-400">
             {registration ? "Registracija" : "Prijava"}
           </h2>
           <button

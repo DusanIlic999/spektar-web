@@ -55,7 +55,7 @@ export default function CommunityPage() {
     return openModal(
       <div className="space-y-5">
         <div className="flex justify-between">
-          <h2 className="text-2xl">Objavi</h2>
+          <h2 className="text-2xl text-green-400">Objavi</h2>
           <button
             onClick={closeModal}
             className="text-red-500 cursor-pointer text-xl font-bold"
@@ -83,7 +83,7 @@ export default function CommunityPage() {
         <IoIosArrowBack />
         Back
       </div>
-      <div className="text-white w-full h-fit pb-5 rounded-2xl">
+      <div className="text-white w-full h-fit pb-5 rounded-2xl space-y-5">
         {isFetching || !data || isFetchingMembers || !members ? (
           <Spinner />
         ) : (
@@ -94,7 +94,7 @@ export default function CommunityPage() {
               onImageChange={(file) => uploadImageMutation.mutate(file)}
               handleOpenModal={handleOpenModal}
             />
-            <div className="p-5 w-full space-y-5">
+            <div className="w-full space-y-5">
               <PostList />
             </div>
           </>

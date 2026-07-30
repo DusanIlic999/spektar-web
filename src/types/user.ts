@@ -10,4 +10,6 @@ export interface IUser {
   posts: IPost[];
   updatedAt: string;
   username: string;
+  bio: string | null;
+  currentUser?: boolean;
 }

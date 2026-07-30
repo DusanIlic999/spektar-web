@@ -10,6 +10,7 @@ import { PostCard } from "../components/PostCard";
 import type { UpVotePayload } from "../components/PostList";
 import { UserCard } from "../components/UserCard";
 import { useDebounce } from "../lib/useDebounce";
+import { useAuthStore } from "../store/authStore";
 
 type TSearchFilter = "communities" | "posts" | "users";
 
@@ -18,10 +19,12 @@ export default function SearchPage() {
   const [search, setSearch] = useState<string>("");
   const queryClient = useQueryClient();
   const debounce = useDebounce(search, 600);
+  const token = useAuthStore((s) => s.token);
 
   const { data: communities } = useQuery<IArrayData<ICommunity>>({
     queryKey: ["search-communities"],
-    queryFn: () => apiClient.get("/communities"),
+    queryFn: () =>
+      apiClient.get(token ? "/communities" : "/communities/public"),
   });
 
   const { data: users } = useQuery<IArrayData<IUser>>({
@@ -46,11 +49,16 @@ export default function SearchPage() {
   const filteredData = useMemo(() => {
     if (filter === "communities") {
       if (debounce.length > 0) {
-        return communities?.data.filter((community: ICommunity) =>
-          community.name
-            .toLowerCase()
-            .trim()
-            .includes(debounce?.toLowerCase().trim()),
+        return communities?.data.filter(
+          (community: ICommunity) =>
+            community.name
+              .toLowerCase()
+              .trim()
+              .includes(debounce?.toLowerCase().trim()) ||
+            community.category
+              .toLowerCase()
+              .trim()
+              .includes(debounce?.toLowerCase().trim()),
         );
       } else {
         return communities?.data;
@@ -85,7 +93,7 @@ export default function SearchPage() {
         return users?.data;
       }
     }
-  }, [debounce, filter]);
+  }, [debounce, filter, communities, users, posts]);
 
   const downVoteMutation = useMutation({
     mutationFn: ({ id }: UpVotePayload) => {
@@ -105,7 +113,7 @@ export default function SearchPage() {
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      <div className="mt-5 flex gap-10 bg-black/70 w-full px-5 py-2 rounded-lg">
+      <div className="mt-5 flex gap-10 bg-black/70 w-full px-5 py-3 rounded-lg">
         <div
           className={`cursor-pointer ${filter === "communities" && `underline underline-offset-2 text-green-500 `}`}
           onClick={() => {

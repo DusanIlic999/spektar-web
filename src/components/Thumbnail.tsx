@@ -10,10 +10,10 @@ export const Thumbnail = () => {
       <div className="text-white z-20 absolute  rounded-2xl top-0 opacity-100 w-full h-full bg-gradient-to-b from-transparent to-black"></div>
       <div className="text-white z-20 absolute rounded-2xl bottom-0 p-5">
         <div className="text-2xl font-bold">Spektra Srbije</div>
-        <div className="text-lg font-semibold">Dusan Ilic</div>
+        {/* <div className="text-lg font-semibold"></div> */}
         <div className="text-gray-300 text-sm">
-          Mesto za povezivanje, deljenje preporuka, događaja i priča iz našeg
-          grada.
+          Mesto za povezivanje, deljenje preporuka, događaja i priča iz naših
+          gradova.
         </div>
       </div>
       <div className="text-white z-20 absolute rounded-2xl bottom-0 right-0 p-5">

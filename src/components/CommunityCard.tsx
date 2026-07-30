@@ -50,7 +50,7 @@ export const CommunityCard = ({ community, isMember }: ICommunityCardProp) => {
   });
 
   return (
-    <div className="w-full h-[180px] bg-gray-600/25 rounded-2xl flex gap-5 flex">
+    <div className="w-full h-[180px] bg-black/60 rounded-2xl flex gap-5 border border-white/15">
       {community.coverImageUrl && (
         <div className="relative w-3/10">
           <img

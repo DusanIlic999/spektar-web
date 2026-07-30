@@ -7,9 +7,11 @@ import {
 } from "react-icons/io5";
 import { PiGearSixLight } from "react-icons/pi";
 import { Link, useLocation } from "react-router-dom";
+import { useAuthStore } from "../store/authStore";
 
 export const SideBar = () => {
   const { pathname } = useLocation();
+    const token = useAuthStore((s) => s.token);
 
   return (
     <div className="min-w-65 bg-black/60 h-fit pt-0 rounded-2xl border border-white/15">
@@ -43,26 +45,30 @@ export const SideBar = () => {
         <IoBookmarkOutline size={"19"} />
         Saved
       </Link>
-      <Link
-        to={"/notification"}
-        className={`relative flex gap-3 ${pathname == "/notification" ? "bg-green-400/40 text-green-400" : "text-gray-400"} items-center p-3 pl-5 font-semibold`}
-      >
-        {pathname == "/notification" && (
-          <div className="h-7 rounded-full bottom-1/2 translate-y-1/2 w-1 left-0 absolute bg-green-500"></div>
-        )}
-        <AiOutlineBell size={"19"} />
-        Notification
-      </Link>
-      <Link
-        to={"/chat"}
-        className={`relative flex gap-3 ${pathname == "/chat" ? "bg-green-400/40 text-green-400" : "text-gray-400"} items-center p-3 pl-5 font-semibold`}
-      >
-        {pathname == "/chat" && (
-          <div className="h-7 rounded-full bottom-1/2 translate-y-1/2 w-1 left-0 absolute bg-green-500"></div>
-        )}
-        <IoChatbubblesOutline size={"19"} />
-        Chat
-      </Link>
+      {token && (
+        <>
+          <Link
+            to={"/notification"}
+            className={`relative flex gap-3 ${pathname == "/notification" ? "bg-green-400/40 text-green-400" : "text-gray-400"} items-center p-3 pl-5 font-semibold`}
+          >
+            {pathname == "/notification" && (
+              <div className="h-7 rounded-full bottom-1/2 translate-y-1/2 w-1 left-0 absolute bg-green-500"></div>
+            )}
+            <AiOutlineBell size={"19"} />
+            Notification
+          </Link>
+          <Link
+            to={"/chat"}
+            className={`relative flex gap-3 ${pathname == "/chat" ? "bg-green-400/40 text-green-400" : "text-gray-400"} items-center p-3 pl-5 font-semibold`}
+          >
+            {pathname == "/chat" && (
+              <div className="h-7 rounded-full bottom-1/2 translate-y-1/2 w-1 left-0 absolute bg-green-500"></div>
+            )}
+            <IoChatbubblesOutline size={"19"} />
+            Chat
+          </Link>
+        </>
+      )}
       <Link
         to={"/search"}
         className={`relative flex gap-3 ${pathname == "/search" ? "bg-green-400/40 text-green-400" : "text-gray-400"} items-center p-3 pl-5 font-semibold`}

@@ -44,7 +44,7 @@ export default function CreateCommunityFormPage() {
       <div className="w-full flex justify-center pb-5">
         <div className="w-150 text-white">
           <h3 className="text-xl font-bold py-4">Kreiraj zajednicu</h3>
-          <div className="bg-black/80 w-150 rounded-2xl border border-white/15">
+          <div className="bg-black/80 w-xl rounded-2xl border border-white/15">
             <Form
               layout="vertical"
               className="!p-5"

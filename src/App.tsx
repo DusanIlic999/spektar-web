@@ -3,6 +3,7 @@ import "./App.css";
 import { lazy, Suspense } from "react";
 import { Layout } from "./components/Layout";
 import { Fallback } from "./components/fallback/Fallback";
+import ScrollToTop from "./components/ScrollToTop";
 
 const HomePage = lazy(() =>
   import("./pages").then((module) => ({ default: module.HomePage })),
@@ -42,36 +43,32 @@ const PostPage = lazy(() =>
 const Profile = lazy(() =>
   import("./pages").then((module) => ({ default: module.Profile })),
 );
+const ProfileEditPage = lazy(() =>
+  import("./pages").then((module) => ({ default: module.ProfileEditPage })),
+);
 
 function App() {
   return (
     <Suspense fallback={<Fallback />}>
       <Routes>
         <Route element={<Layout />}>
-          <Route index path="/" element={<HomePage />}></Route>
-          <Route index path="/chat" element={<ChatPage />}></Route>
+          <Route index element={<HomePage />}></Route>
+          <Route path="/chat" element={<ChatPage />}></Route>
+          <Route path="/notification" element={<NotificationPage />}></Route>
+          <Route path="/saved" element={<SavedPage />}></Route>
+          <Route path="/search" element={<SearchPage />}></Route>
+          <Route path="/settings" element={<SettingsPage />}></Route>
+          <Route path="/tranding" element={<TrandingPage />}></Route>
           <Route
-            index
-            path="/notification"
-            element={<NotificationPage />}
-          ></Route>
-          <Route index path="/saved" element={<SavedPage />}></Route>
-          <Route index path="/search" element={<SearchPage />}></Route>
-          <Route index path="/settings" element={<SettingsPage />}></Route>
-          <Route index path="/tranding" element={<TrandingPage />}></Route>
-          <Route
-            index
             path="/create-community"
             element={<CreateCommunityFormPage />}
           ></Route>
-          <Route index path="/communities" element={<CommunitesPage />}></Route>
-          <Route
-            index
-            path="/community/:slug"
-            element={<CommunityPage />}
-          ></Route>
-          <Route index path="/post/:id" element={<PostPage />}></Route>
-          <Route index path="/profile" element={<Profile />}></Route>
+          <Route path="/communities" element={<CommunitesPage />}></Route>
+          <Route path="/community/:slug" element={<CommunityPage />}></Route>
+          <Route path="/post/:id" element={<PostPage />}></Route>
+          <Route path="/profile" element={<Profile />}></Route>
+          <Route path="/profile/:username" element={<Profile />}></Route>
+          <Route path="/profile/edit" element={<ProfileEditPage />}></Route>
         </Route>
       </Routes>
     </Suspense>

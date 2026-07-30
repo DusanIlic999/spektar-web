@@ -4,13 +4,16 @@ import type { IArrayData } from "../types/api";
 import type { ICommunity } from "../types/community";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { useAuthStore } from "../store/authStore";
 
 export const MyCommunity = () => {
   const navigate = useNavigate();
+    const token = useAuthStore((s) => s.token);
 
   const { data } = useQuery<IArrayData<ICommunity>>({
     queryKey: ["my-communities"],
     queryFn: () => apiClient.get("/communities/me"),
+    enabled: token ? true : false,
   });
 
   const myCommunities = useMemo(() => {
@@ -31,9 +34,15 @@ export const MyCommunity = () => {
       <div className="flex flex-col gap-2 my-2">
         {myCommunities &&
           myCommunities.map((community: ICommunity) => (
-            <div className="py-1 cursor-pointer" onClick={()=> {
-              navigate(`/community/${community.slug}`);
-            }}>{community.name}</div>
+            <div
+              key={community.id}
+              className="py-1 cursor-pointer"
+              onClick={() => {
+                navigate(`/community/${community.slug}`);
+              }}
+            >
+              {community.name}
+            </div>
           ))}
       </div>
       <Link

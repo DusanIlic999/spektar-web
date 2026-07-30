@@ -4,6 +4,7 @@ import { toast } from "../lib/toast";
 import { apiClient } from "../api/client";
 import { useForm } from "antd/es/form/Form";
 import { useAuthStore } from "../store/authStore";
+import { userStorage } from "../lib/userStorage";
 
 interface ILogin {
   email: string;
@@ -20,9 +21,20 @@ export const LoginForm = ({ close }: ILoginFormProps) => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: (obj: ILogin) => apiClient.post("/auth/login", obj),
-    onSuccess: (data: any) => {
+    onSuccess: (data: {
+      data: {
+        accessToken: string;
+        user: {
+          id: string;
+          email: string;
+          username: string;
+          displayName: string;
+        };
+      };
+    }) => {
       toast.success("Uspesna prijava", "Uspesno ste se prijavili.");
       setToken(data.data.accessToken);
+      userStorage.set(data.data.user.username);
       close();
     },
     onError: () =>

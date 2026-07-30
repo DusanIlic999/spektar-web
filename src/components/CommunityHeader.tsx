@@ -1,6 +1,10 @@
 import { useRef } from "react";
 import { MdOutlineImageSearch, MdOutlinePersonOutline } from "react-icons/md";
 import type { ICommunity } from "../types/community";
+import { useAuthStore } from "../store/authStore";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "../api/client";
+import { toast } from "../lib/toast";
 
 interface CommunityHeaderProps {
   community: ICommunity;
@@ -16,6 +20,42 @@ export const CommunityHeader = ({
   handleOpenModal,
 }: CommunityHeaderProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const token = useAuthStore((s) => s.token);
+  const queryClient = useQueryClient();
+
+  const { mutate: join, isPending: joinPending } = useMutation({
+    mutationFn: () => {
+      return apiClient.post(`/communities/${community.id}/join`);
+    },
+    onSuccess: () => {
+      toast.success("Dobro dosli", "Uspesno ste se pridruzili zajednici.");
+      queryClient.invalidateQueries({
+        queryKey: ["community", community.slug],
+      });
+    },
+    onError: () =>
+      toast.error(
+        "Greska tokom pridruzivanja",
+        "Desila se greska tokom pridruzivanja, pokusajte ponovo ili pozovite administratora",
+      ),
+  });
+
+  const { mutate: disband, isPending: disbandPending } = useMutation({
+    mutationFn: () => {
+      return apiClient.post(`/communities/${community.id}/disband`);
+    },
+    onSuccess: () => {
+      toast.success("Vidimo se", "Uspesno ste se izasli iz zajednici.");
+      queryClient.invalidateQueries({
+        queryKey: ["community", community.slug],
+      });
+    },
+    onError: () =>
+      toast.error(
+        "Greska tokom izlaza iz zajednice",
+        "Desila se greska tokom izlaska iz zajednice, pokusajte ponovo ili pozovite administratora",
+      ),
+  });
 
   const handleIconClick = () => {
     inputRef.current?.click();
@@ -67,12 +107,41 @@ export const CommunityHeader = ({
             </div>
           </div>
           <div className="w-full flex justify-end">
-            <button
-              className="bg-green-800 px-3 h-10 rounded-xl cursor-pointer font-semibold select-none"
-              onClick={handleOpenModal}
-            >
-              Objavi
-            </button>
+            {token && (
+              <div className="flex gap-3">
+                {community.currentMember ? (
+                  <>
+                <button
+                  className="bg-green-800 border border-green-600 px-3 h-10 rounded-lg cursor-pointer font-semibold select-none"
+                  onClick={handleOpenModal}
+                >
+                  Nova objava
+                </button>
+                  <button
+                    className="bg-red-800 border border-red-600 px-3 h-10 rounded-lg cursor-pointer font-semibold select-none"
+                    disabled={disbandPending}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      disband();
+                    }}
+                  >
+                    Odjavi se
+                  </button>
+                  </>
+                ) : (
+                  <button
+                    className="px-3 py-2 bg-green-800 border border-green-600 rounded-lg cursor-pointer select-none"
+                    disabled={joinPending}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      join();
+                    }}
+                  >
+                    Pridruzi se
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

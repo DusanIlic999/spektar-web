@@ -3,6 +3,7 @@ import type { ICommunity } from "./community";
 interface IAuthor {
   avatarUrl: null | string;
   displayName: string;
+  username: string;
   id: string;
 }
 

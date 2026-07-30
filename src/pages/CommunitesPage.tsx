@@ -6,20 +6,24 @@ import { useNavigate } from "react-router-dom";
 import { type IArrayData } from "../types/api";
 import { useMemo, useState } from "react";
 import { useDebounce } from "../lib/useDebounce";
+import { useAuthStore } from "../store/authStore";
 
 export default function CommunitesPage() {
   const navigate = useNavigate();
   const [search, setSearch] = useState<string>("");
   const debounce = useDebounce(search, 600);
+  const token = useAuthStore((s) => s.token);
 
   const { data, isFetching, isError } = useQuery<IArrayData<ICommunity>>({
     queryKey: ["communities"],
-    queryFn: () => apiClient.get("/communities"),
+    queryFn: () =>
+      apiClient.get(token ? "/communities" : "/communities/public"),
   });
 
   const { data: myCommunities } = useQuery<IArrayData<ICommunity>>({
     queryKey: ["my-communities"],
     queryFn: () => apiClient.get("/communities/me"),
+    enabled: token ? true : false,
   });
 
   const isMemberOfCommunity = (currentCommunity: ICommunity) => {
@@ -36,7 +40,7 @@ export default function CommunitesPage() {
     } else {
       return data?.data;
     }
-  }, [debounce]);
+  }, [debounce, data]);
 
   if (isError) {
     return (
@@ -52,7 +56,7 @@ export default function CommunitesPage() {
       <div className="flex items-center justify-between">
         <h3 className="text-2xl font-semibold">Zajednice</h3>
         <button
-          className="text-lg font-semibold px-2 py-1 bg-green-800 rounded-lg cursor-pointer"
+          className="font-semibold px-3 py-1 bg-green-800 border border-green-500 rounded-lg cursor-pointer"
           onClick={() => navigate("/create-community")}
         >
           Kreiraj zajednicu
@@ -60,7 +64,7 @@ export default function CommunitesPage() {
       </div>
       <div className="my-3 mt-5">
         <input
-          className="px-2 py-1 w-full border rounded-md"
+          className="px-2 py-1 w-full border rounded-md border-white/40"
           placeholder="Pretrazi zajednice..."
           value={search}
           onChange={(e) => setSearch(e.target.value as string)}
