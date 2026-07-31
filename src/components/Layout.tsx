@@ -20,14 +20,18 @@ export const Layout = () => {
       ref={scrollRef}
     >
       <Header />
-      <div className="w-350 py-5 mx-auto flex gap-5">
-        <div className="flex flex-col gap-3">
+      <div className="w-full 2xl:w-350 py-5 mx-auto flex 2xl:gap-5">
+        <div className="flex-col gap-3 hidden lg:flex pl-5">
           <SideBar />
           <MyCommunity />
           <CreateYourCommunity />
         </div>
-        <Outlet />
-        <WeatherBar />
+        <div className="w-full p-3 pt-0">
+          <Outlet />
+        </div>
+        <div className="hidden 2xl:block">
+          <WeatherBar />
+        </div>
       </div>
     </div>
   );

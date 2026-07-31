@@ -80,11 +80,11 @@ export default function ProfileEditPage() {
   };
   if (!user) return null;
   return (
-    <div className="w-full flex flex-col items-center pb-5">
-      <div className="w-xl text-white">
+    <div className="w-full flex flex-col items-center pb-5 p-3 pt-0">
+      <div className="2xl:w-xl text-white">
         <h3 className="text-xl font-bold py-4">Izmeni profil</h3>
       </div>
-      <div className="bg-black/80 w-xl rounded-2xl border border-white/15">
+      <div className="bg-black/80  w-full 2xl:w-xl rounded-2xl border border-white/15">
         <Form
           layout="vertical"
           className="!p-5"
@@ -147,7 +147,7 @@ export default function ProfileEditPage() {
               </span>
             }
           >
-            <div className="w-130! h-40 mt-1 bg-black/50 relative rounded-2xl">
+            <div className="2xl:w-130! h-40 mt-1 bg-black/50 relative rounded-2xl">
               <input
                 ref={inputRef}
                 type="file"

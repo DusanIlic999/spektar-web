@@ -75,7 +75,7 @@ export default function CommunityPage() {
   };
 
   return (
-    <div className="flex flex-col w-full text-white  gap-3">
+    <div className="flex flex-col w-full text-white p-5 pt-0 2xl:p-0 gap-3">
       <div
         className="flex items-center gap-1 cursor-pointer"
         onClick={() => navigate(-1)}

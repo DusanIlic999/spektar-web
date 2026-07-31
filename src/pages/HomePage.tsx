@@ -11,7 +11,7 @@ export default function HomePage() {
   const [postStatus, setStatus] = useState<TPostStatus>("newest");
 
   return (
-    <div className="w-full text-white space-y-5">
+    <div className="w-full text-white space-y-5 2xl:px-0">
       <Thumbnail />
       <Filters
         postType={postType}

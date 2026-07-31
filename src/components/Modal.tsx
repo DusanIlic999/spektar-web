@@ -17,7 +17,7 @@ export const Modal = ({
       onClick={onClose}
     >
       <div
-        className={`bg-green-950 text-white rounded-2xl max-h-150 overflow-y-auto border custom-scroll border-white/10 shadow-2xl max-w-xl w-full mx-4 p-6`}
+        className={`bg-gray-950 text-white rounded-2xl max-h-150 overflow-y-auto border custom-scroll border-white/10 shadow-2xl max-w-80 2xl:max-w-xl w-full mx-4 p-6`}
         onClick={(e) => e.stopPropagation()}
       >
         {children}

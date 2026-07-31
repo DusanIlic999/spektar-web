@@ -6,7 +6,7 @@ export const UserCard = ({ user }: { user: IUser }) => {
 
   return (
     <div
-      className="w-full bg-black/60 p-5 rounded-lg border border-white/15 cursor-pointer"
+      className="w-full bg-black/60 p-3 2xl:p-5 rounded-lg border border-white/15 cursor-pointer"
       onClick={() => navigate(`/profile/${user.username}`)}
     >
       <div className="text-sm mt-1 flex items-center gap-5">

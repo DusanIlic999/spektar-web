@@ -11,12 +11,12 @@ export const Filters = ({
   setStatus: (status: TPostStatus) => void;
 }) => {
   return (
-    <div className="w-full p-2 rounded-xl bg-black/60 border border-white/15 flex justify-between px-5 items-center">
-      <div className="flex gap-1 items-center">
+    <div className="w-full max-w-screen p-2 rounded-xl 2xl:bg-black/60 2xl:border border-white/15 flex flex-wrap justify-between gap-5 items-center">
+      <div className="flex flex-wrap gap-2 2xl:gap-1 2xl:gap-1 items-center">
         {(["all", ...Object.values(POSTTYPE)] as TPostTypeFilter[]).map(
           (value) => (
             <div
-              className={`cursor-pointer select-none text-gray-400 px-5 py-1 ${postType === value && "bg-green-400/40 rounded-lg text-white"}`}
+              className={`cursor-pointer select-none text-gray-400 px-2 2xl:px-5 py-1 ${postType === value && "bg-green-400/40 rounded-lg text-white"}`}
               onClick={() => setPostType(value)}
             >
               {value === "all" ? "Sve" : TYPE_LABELS[value]}

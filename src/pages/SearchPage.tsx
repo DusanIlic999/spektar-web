@@ -105,11 +105,11 @@ export default function SearchPage() {
   });
 
   return (
-    <div className="w-full text-white h-150 rounded-2xl">
+    <div className="w-full text-white h-150 rounded-2xl p-3 2xl:p-0">
       <input
         type="search"
         placeholder="🔍 Pretrazi postove, korisnike..."
-        className="py-3 bg-black/80 rounded-2xl px-5 text-white w-full search-input"
+        className="py-3 bg-black/80 rounded-lg px-5 text-white w-full search-input"
         onChange={(e) => setSearch(e.target.value)}
       />
 

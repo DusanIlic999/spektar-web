@@ -38,7 +38,7 @@ export default function PostPage() {
   });
 
   return (
-    <div className="flex flex-col w-full text-white gap-3">
+    <div className="flex flex-col 2xl:w-full text-white gap-3">
       <div
         className="flex items-center gap-1 cursor-pointer"
         onClick={() => navigate(-1)}
@@ -105,7 +105,7 @@ export default function PostPage() {
           <div className="h-75 w-full flex">
             <img
               src={data?.data.imageUrl}
-              className="w-full h-full object-cover rounded-2xl"
+              className="w-full h-full object-cover rounded"
             />
           </div>
         )}

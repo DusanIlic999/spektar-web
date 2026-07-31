@@ -99,7 +99,7 @@ export const CreatePostForm = ({
   };
 
   return (
-    <div>
+    <div className="w-full">
       <Form layout="vertical" form={form} onFinish={onFinish}>
         <Row justify={"start"}>
           <Form.Item
@@ -107,7 +107,7 @@ export const CreatePostForm = ({
             name="title"
             rules={[{ required: true, message: "Naslov je obavezan" }]}
           >
-            <Input className="w-130!" placeholder="Title..." />
+            <Input className="w-70! 2xl:w-130!" placeholder="Title..." />
           </Form.Item>
         </Row>
         <Row justify={"start"}>
@@ -117,7 +117,7 @@ export const CreatePostForm = ({
             rules={[{ required: true, message: "Sadrzaj je obavezan" }]}
           >
             <Input.TextArea
-              className="w-130!"
+              className="w-70! 2xl:w-130!"
               placeholder="Content..."
               rows={4}
               style={{ resize: "none" }}
@@ -164,7 +164,7 @@ export const CreatePostForm = ({
           <Form.Item
             label={<span className="text-white">Slika (opciono)</span>}
           >
-            <div className="w-130! h-40 mt-1 bg-black/50 rounded-lg relative">
+            <div className="w-70! 2xl:w-130! h-40 mt-1 bg-black/50 rounded-lg relative">
               <input
                 ref={inputRef}
                 type="file"
@@ -177,7 +177,7 @@ export const CreatePostForm = ({
                   <img
                     src={preview}
                     alt="preview"
-                    className="w-130! h-40 relative -top-8 object-cover rounded-xl"
+                    className="w-70! 2xl:w-130! h-40 relative -top-8 object-cover rounded-xl"
                   />
                   <button
                     type="button"
@@ -190,7 +190,7 @@ export const CreatePostForm = ({
               ) : (
                 <div
                   onClick={handleClick}
-                  className="absolute z-10 bg-green-900/50 w-full h-full top-0 backdrop-blur-[2px] select-none cursor-pointer rounded-lg flex items-center justify-center text-white"
+                  className="absolute z-10 bg-black/50 w-full h-full top-0 backdrop-blur-[2px] select-none cursor-pointer rounded-lg flex items-center justify-center text-white"
                 >
                   Klikni da dodas sliku
                 </div>

@@ -6,9 +6,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useAuthStore } from "../store/authStore";
 
-export const MyCommunity = () => {
+export const MyCommunity = ({ mobile = false }: { mobile?: boolean }) => {
   const navigate = useNavigate();
-    const token = useAuthStore((s) => s.token);
+  const token = useAuthStore((s) => s.token);
 
   const { data } = useQuery<IArrayData<ICommunity>>({
     queryKey: ["my-communities"],
@@ -21,7 +21,7 @@ export const MyCommunity = () => {
   }, [data]);
 
   return (
-    <div className="text-white min-w-65 bg-black/60 h-fit p-5 rounded-2xl border border-white/15 text-sm">
+    <div className={`text-white ${!mobile && "bg-black/60 rounded-2xl border"} min-w-65  h-fit p-5  border-white/15 text-sm`}>
       <div className="border-b border-white/10 pb-2.5 flex justify-between items-center">
         <div className="font-semibold tracking-wider">Moje zajednice</div>
         <Link

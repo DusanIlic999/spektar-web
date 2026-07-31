@@ -1,9 +1,15 @@
 import { useNavigate } from "react-router-dom";
 
-export const CreateYourCommunity = () => {
+export const CreateYourCommunity = ({
+  mobile = false,
+}: {
+  mobile?: boolean;
+}) => {
   const navigate = useNavigate();
   return (
-    <div className="text-white space-y-4 min-w-65 bg-gradient-to-br from-green-500 to-green-900 h-fit p-5 rounded-2xl border border-white/15 text-sm">
+    <div
+      className={`text-white space-y-4 min-w-65 ${!mobile && "rounded-2xl border"} bg-gradient-to-br from-green-500 to-green-900 h-fit p-5 border-white/15 text-sm`}
+    >
       <h3 className="text-xl font-semibold">
         Kreiraj svoju <span className="text-green-300 italic">zajednicu</span>
       </h3>
@@ -11,7 +17,7 @@ export const CreateYourCommunity = () => {
         Poveži ljude iz svog kraja na jednom mestu.
       </p>
       <button
-        className="w-full bg-green-600 py-2 rounded-2xl cursor-pointer"
+        className={`w-full bg-green-600 py-2 ${!mobile && "rounded-2xl"} cursor-pointer`}
         onClick={() => navigate("/create-community")}
       >
         Pocni

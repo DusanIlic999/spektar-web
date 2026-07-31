@@ -9,15 +9,17 @@ import { PiGearSixLight } from "react-icons/pi";
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 
-export const SideBar = () => {
+export const SideBar = ({ mobile = false }: { mobile?: boolean }) => {
   const { pathname } = useLocation();
-    const token = useAuthStore((s) => s.token);
+  const token = useAuthStore((s) => s.token);
 
   return (
-    <div className="min-w-65 bg-black/60 h-fit pt-0 rounded-2xl border border-white/15">
+    <div
+      className={`min-w-65 ${!mobile && "bg-black/60 border rounded-2xl"} h-fit pt-0  border-white/15`}
+    >
       <Link
         to={""}
-        className={`relative flex gap-3 ${pathname == "/" ? "bg-green-400/40 text-green-400" : "text-gray-400"} rounded-t-2xl items-center p-3 pl-5 font-semibold`}
+        className={`relative flex gap-3 ${pathname == "/" ? "bg-green-400/40 text-green-400" : "text-gray-400"} ${!mobile && "rounded-t-2xl"} items-center p-3 pl-5 font-semibold`}
       >
         {pathname == "/" && (
           <div className="h-7 rounded-full bottom-1/2 translate-y-1/2 w-1 left-0 absolute bg-green-500"></div>
@@ -81,7 +83,7 @@ export const SideBar = () => {
       </Link>
       <Link
         to={"/settings"}
-        className={`relative flex gap-3 ${pathname == "/settings" ? "bg-green-400/40 text-green-400" : "text-gray-400"} rounded-b-2xl items-center p-3 pl-5 font-semibold`}
+        className={`relative flex gap-3 ${pathname == "/settings" ? "bg-green-400/40 text-green-400" : "text-gray-400"} ${!mobile && "rounded-b-2xl"} items-center p-3 pl-5 font-semibold`}
       >
         {pathname == "/settings" && (
           <div className="h-7 rounded-full bottom-1/2 translate-y-1/2 w-1 left-0 absolute bg-green-500"></div>

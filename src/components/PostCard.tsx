@@ -14,14 +14,14 @@ export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
   const navigate = useNavigate();
   const token = useAuthStore((s) => s.token);
 
-  const { text, isTruncated, expanded, toggle } = useTruncate(post.content);
+  const { text, isTruncated } = useTruncate(post.content);
 
   return (
     <div
-      className={`w-full ${post.imageUrl ? "h-50" : "h-fit"} max-h-50 bg-black/60 rounded-lg flex gap-5 border border-white/15`}
+      className={`w-full ${post.imageUrl ? "2xl:h-50" : "h-fit"} 2xl:max-h-50 bg-black/60 rounded-lg flex gap-5 border border-white/15`}
     >
       {post.imageUrl && (
-        <div className="relative w-3/10">
+        <div className="relative w-3/10 hidden 2xl:flex">
           <img
             src={post.imageUrl}
             className="w-full h-full aspect-square object-cover rounded-l-lg"
@@ -29,7 +29,7 @@ export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
         </div>
       )}
       <div
-        className={`flex w-7/10 ${post.imageUrl ? "p-2 pb-2" : "p-5 pr-2 pb-2 w-full"}`}
+        className={`flex w-full ${post.imageUrl ? "p-2 pb-2 lg:p-5 lg:pl-0 2xl:w-7/10" : "p-2 pr-2 pb-2 2xl:p-5 w-full"}`}
       >
         <div className="flex justify-between w-full flex-col gap-2">
           <div className="space-y-2 h-full">
@@ -75,7 +75,7 @@ export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
             {token && (
               <div className="flex gap-4 select-none">
                 <div
-                  className="flex items-center gap-2 bg-gray-800 px-2 rounded-xl cursor-pointer"
+                  className="flex items-center gap-2 bg-gray-800 px-2 rounded-lg cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
                     onUpvote(post.id);
@@ -85,7 +85,7 @@ export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
                   <span className="text-green-500">{post.upvoteCount}</span>
                 </div>
                 <div
-                  className="flex items-center gap-2 bg-gray-800 px-2 rounded-xl cursor-pointer"
+                  className="flex items-center gap-2 bg-gray-800 px-2 rounded-lg cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
                     onDownvote(post.id);
@@ -96,7 +96,7 @@ export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
                 </div>
               </div>
             )}
-            <div className="flex">
+            <div className="flex self-end">
               <p className="px-2 py-1 border w-fit rounded-lg bg-green-800 border-green-500">
                 {TYPE_LABELS[post.type]}
               </p>

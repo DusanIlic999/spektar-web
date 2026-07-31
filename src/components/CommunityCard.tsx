@@ -50,9 +50,9 @@ export const CommunityCard = ({ community, isMember }: ICommunityCardProp) => {
   });
 
   return (
-    <div className="w-full h-[180px] bg-black/60 rounded-2xl flex gap-5 border border-white/15">
+    <div className="w-full h-[200px] bg-black/60 rounded-2xl flex gap-5 border border-white/15">
       {community.coverImageUrl && (
-        <div className="relative w-3/10">
+        <div className="relative w-3/10 hidden 2xl:block">
           <img
             src={
               community.coverImageUrl
@@ -64,7 +64,7 @@ export const CommunityCard = ({ community, isMember }: ICommunityCardProp) => {
         </div>
       )}
       <div
-        className={`flex ${community.coverImageUrl ? "w-7/10 p-2" : "w-full p-5"} capitalize`}
+        className={`flex ${community.coverImageUrl ? "2xl:w-7/10 p-5 2xl:p-2" : "w-full p-5"} capitalize`}
       >
         <div className="flex justify-between w-full flex-col">
           <div className="space-y-1 h-full">
@@ -76,10 +76,10 @@ export const CommunityCard = ({ community, isMember }: ICommunityCardProp) => {
                 {community.name}
               </h3>
               <div className="flex gap-2">
-                <div className="flex items-center gap-1 bg-gray-600/50 px-2 rounded-2xl">
+                <div className="flex items-center gap-1 bg-gray-600/50 px-2 h-7 text-nowrap rounded-2xl">
                   <MdOutlinePersonOutline /> {community.memberCount} Clanova
                 </div>
-                <div className="flex items-center gap-1 bg-gray-600/50 px-2 rounded-2xl">
+                <div className="flex items-center gap-1 bg-gray-600/50 px-2 h-7 text-nowrap rounded-2xl">
                   <MdOutlineInsertDriveFile />
                   {community.postCount} Objava
                 </div>
@@ -92,7 +92,7 @@ export const CommunityCard = ({ community, isMember }: ICommunityCardProp) => {
               <>
                 {isMember ? (
                   <button
-                    className="px-2 py-1 bg-red-800 rounded-lg cursor-pointer select-none"
+                    className="px-2 py-1 bg-red-800 rounded-lg cursor-pointer select-none "
                     disabled={disbandPending}
                     onClick={(e) => {
                       e.stopPropagation();

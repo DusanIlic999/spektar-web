@@ -42,9 +42,9 @@ export default function CreateCommunityFormPage() {
   return (
     <>
       <div className="w-full flex justify-center pb-5">
-        <div className="w-150 text-white">
+        <div className="p-3 pt-0 2xl:w-150 text-white">
           <h3 className="text-xl font-bold py-4">Kreiraj zajednicu</h3>
-          <div className="bg-black/80 w-xl rounded-2xl border border-white/15">
+          <div className="bg-black/80 2xl:w-xl rounded-2xl border border-white/15">
             <Form
               layout="vertical"
               className="!p-5"
@@ -132,7 +132,7 @@ export default function CreateCommunityFormPage() {
                   </span>
                 }
               >
-                <div className="flex gap-3 pt-2">
+                <div className="flex flex-col 2xl:flex-row gap-3 pt-2">
                   <div
                     className={`flex flex-col gap-2 p-4 cursor-pointer ${type === "public" ? "bg-green-400/20 border-green-400" : "border-white/25"} rounded-2xl border select-none`}
                     onClick={() => setType("public")}

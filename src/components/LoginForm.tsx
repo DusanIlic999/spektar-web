@@ -57,7 +57,7 @@ export const LoginForm = ({ close }: ILoginFormProps) => {
             label={<span className="text-white">Email</span>}
             name="email"
           >
-            <Input className="w-100!" placeholder="Email..." />
+            <Input className="w-70! 2xl:w-100!" placeholder="Email..." />
           </Form.Item>
         </Row>
         <Row justify={"center"}>
@@ -65,7 +65,7 @@ export const LoginForm = ({ close }: ILoginFormProps) => {
             label={<span className="text-white">Lozinka</span>}
             name={"password"}
           >
-            <Input.Password className="w-100!" placeholder="Lozinka..." />
+            <Input.Password className="w-70! 2xl:w-100!" placeholder="Lozinka..." />
           </Form.Item>
         </Row>
         <Row justify={"end"} className="flex gap-5 text-white">

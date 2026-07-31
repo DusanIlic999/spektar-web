@@ -108,17 +108,17 @@ export const CommunityHeader = ({
           </div>
           <div className="w-full flex justify-end">
             {token && (
-              <div className="flex gap-3">
+              <div className="flex flex-col lg:flex-row gap-3">
                 {community.currentMember ? (
                   <>
                 <button
-                  className="bg-green-800 border border-green-600 px-3 h-10 rounded-lg cursor-pointer font-semibold select-none"
+                  className="bg-green-800 border border-green-600 px-3 h-7 2xl:h-10 rounded-lg cursor-pointer font-semibold select-none"
                   onClick={handleOpenModal}
                 >
                   Nova objava
                 </button>
                   <button
-                    className="bg-red-800 border border-red-600 px-3 h-10 rounded-lg cursor-pointer font-semibold select-none"
+                    className="bg-red-800 border border-red-600 px-3 h-7 2xl:h-10 rounded-lg cursor-pointer font-semibold select-none"
                     disabled={disbandPending}
                     onClick={(e) => {
                       e.stopPropagation();
