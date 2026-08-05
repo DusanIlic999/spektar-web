@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { apiClient } from "../api/client";
 import { Spinner } from "../components/Spinner";
 import { useModal } from "../context/moda.context.use";
@@ -7,16 +7,15 @@ import { CreatePostForm } from "../components/CreatePostForm";
 import { IoClose } from "react-icons/io5";
 import { CommunityHeader } from "../components/CommunityHeader";
 import { PostList } from "../components/PostList";
-import { IoIosArrowBack } from "react-icons/io";
+import { COMMUNITYTYPE } from "../types/community";
 
 export default function CommunityPage() {
   const { openModal, closeModal } = useModal();
   const { slug } = useParams();
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
-  const { data, isFetching, isError } = useQuery({
-    queryKey: ["community", slug],
+  const { data, isFetching, isError, refetch } = useQuery({
+    queryKey: ["community", slug, "full"],
     queryFn: () => apiClient.get(`/communities/${slug}`),
   });
 
@@ -29,7 +28,7 @@ export default function CommunityPage() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["community", slug] });
+      queryClient.invalidateQueries({ queryKey: ["community", slug, "full"] });
     },
   });
 
@@ -38,9 +37,11 @@ export default function CommunityPage() {
     isFetching: isFetchingMembers,
     isError: isErrorMembers,
   } = useQuery({
-    queryKey: ["members", slug],
+    queryKey: ["members", slug, "full"],
     queryFn: () => apiClient.get(`/communities/${slug}/members`),
   });
+
+  const isPrivate = data?.data.type === COMMUNITYTYPE.PRIVATE;
 
   if (isError || isErrorMembers) {
     return (
@@ -76,13 +77,6 @@ export default function CommunityPage() {
 
   return (
     <div className="flex flex-col w-full text-white p-5 pt-0 2xl:p-0 gap-3">
-      <div
-        className="flex items-center gap-1 cursor-pointer"
-        onClick={() => navigate(-1)}
-      >
-        <IoIosArrowBack />
-        Back
-      </div>
       <div className="text-white w-full h-fit pb-5 rounded-2xl space-y-5">
         {isFetching || !data || isFetchingMembers || !members ? (
           <Spinner />
@@ -90,13 +84,18 @@ export default function CommunityPage() {
           <>
             <CommunityHeader
               community={data.data}
-              memberCount={members.data.length}
-              onImageChange={(file) => uploadImageMutation.mutate(file)}
+              members={members.data}
+              onImageChange={(file) => {
+                uploadImageMutation.mutate(file);
+                refetch();
+              }}
               handleOpenModal={handleOpenModal}
             />
-            <div className="w-full space-y-5">
-              <PostList />
-            </div>
+            {!isPrivate && (
+              <div className="w-full space-y-5">
+                <PostList />
+              </div>
+            )}
           </>
         )}
       </div>

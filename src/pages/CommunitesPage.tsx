@@ -26,10 +26,20 @@ export default function CommunitesPage() {
     enabled: token ? true : false,
   });
 
+  const { data: myJoinRequests } = useQuery<{ data: string[] }>({
+    queryKey: ["my-join-requests"],
+    queryFn: () => apiClient.get("/communities/join-requests/me"),
+    enabled: token ? true : false,
+  });
+
   const isMemberOfCommunity = (currentCommunity: ICommunity) => {
     return myCommunities?.data.some(
       (my: ICommunity) => my.id === currentCommunity.id,
     );
+  };
+
+  const hasPendingRequest = (currentCommunity: ICommunity) => {
+    return myJoinRequests?.data.includes(currentCommunity.id) ?? false;
   };
 
   const filteredCommunities = useMemo(() => {
@@ -73,13 +83,13 @@ export default function CommunitesPage() {
       <div className="pt-5 flex flex-wrap justify-center gap-5">
         {filteredCommunities &&
           filteredCommunities.map((item: ICommunity) => {
-            console.log(item);
             const isMember = isMemberOfCommunity(item);
             return (
               <CommunityCard
                 community={item}
                 key={item.id}
                 isMember={isMember as boolean}
+                hasPendingRequest={hasPendingRequest(item)}
               />
             );
           })}

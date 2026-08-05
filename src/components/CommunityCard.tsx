@@ -2,7 +2,12 @@ import {
   MdOutlineInsertDriveFile,
   MdOutlinePersonOutline,
 } from "react-icons/md";
-import type { ICommunity } from "../types/community";
+import {
+  COMMUNITY_CATEGORY_STYLE,
+  COMMUNITY_TYPE_STYLE,
+  COMMUNITYTYPE,
+  type ICommunity,
+} from "../types/community";
 import { useNavigate } from "react-router-dom";
 import { toast } from "../lib/toast";
 import { apiClient } from "../api/client";
@@ -11,19 +16,33 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 interface ICommunityCardProp {
   community: ICommunity;
   isMember?: boolean;
+  hasPendingRequest?: boolean;
 }
 
-export const CommunityCard = ({ community, isMember }: ICommunityCardProp) => {
+export const CommunityCard = ({
+  community,
+  isMember,
+  hasPendingRequest,
+}: ICommunityCardProp) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const isRestricted = community.type === COMMUNITYTYPE.RESTRICTED;
 
   const { mutate: join, isPending: joinPending } = useMutation({
     mutationFn: () => {
       return apiClient.post(`/communities/${community.id}/join`);
     },
     onSuccess: () => {
-      toast.success("Dobro dosli", "Uspesno ste se pridruzili zajednici.");
+      if (isRestricted) {
+        toast.success(
+          "Zahtev poslat",
+          "Vas zahtev za pridruzivanje je poslat na odobrenje.",
+        );
+      } else {
+        toast.success("Dobro dosli", "Uspesno ste se pridruzili zajednici.");
+      }
       queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+      queryClient.invalidateQueries({ queryKey: ["my-join-requests"] });
       queryClient.invalidateQueries({ queryKey: ["communities"] });
     },
     onError: () =>
@@ -49,6 +68,8 @@ export const CommunityCard = ({ community, isMember }: ICommunityCardProp) => {
       ),
   });
 
+  const isPrivate = community.type === COMMUNITYTYPE.PRIVATE;
+
   return (
     <div className="w-full h-[200px] bg-black/60 rounded-2xl flex gap-5 border border-white/15">
       {community.coverImageUrl && (
@@ -57,7 +78,7 @@ export const CommunityCard = ({ community, isMember }: ICommunityCardProp) => {
             src={
               community.coverImageUrl
                 ? community.coverImageUrl
-                : "/public/placeholder.jpg"
+                : "/public/black-placeholder.jpg"
             }
             className="w-full h-full aspect-square object-cover rounded-l-2xl"
           />
@@ -101,6 +122,15 @@ export const CommunityCard = ({ community, isMember }: ICommunityCardProp) => {
                   >
                     Odjavi se
                   </button>
+                ) : isRestricted && hasPendingRequest ? (
+                  <button
+                    className="px-2 py-1 bg-gray-700 rounded-lg cursor-not-allowed select-none"
+                    disabled
+                  >
+                    Zahtev poslat
+                  </button>
+                ) : isPrivate ? (
+                  <></>
                 ) : (
                   <button
                     className="px-2 py-1 bg-green-800 rounded-lg cursor-pointer select-none"
@@ -110,16 +140,20 @@ export const CommunityCard = ({ community, isMember }: ICommunityCardProp) => {
                       join();
                     }}
                   >
-                    Pridruzi se
+                    {isRestricted ? "Posalji zahtev" : "Pridruzi se"}
                   </button>
                 )}
               </>
             )}
-            <div className="flex gap-3">
-              <p className="px-2 py-1 border w-fit rounded-lg bg-green-800 border-green-500">
+            <div className="flex gap-3 ml-auto">
+              <div
+                className={`px-2 py-1 border w-fit rounded-lg ${COMMUNITY_TYPE_STYLE[community.type]} capitalize flex items-center`}
+              >
                 {community.type}
-              </p>
-              <p className="px-2 py-1 border w-fit rounded-lg bg-yellow-800 border-yellow-500">
+              </div>
+              <p
+                className={`px-2 py-1 border w-fit rounded-lg ${COMMUNITY_CATEGORY_STYLE[community.category]}`}
+              >
                 {community.category}
               </p>
             </div>
