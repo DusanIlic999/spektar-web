@@ -55,6 +55,15 @@ export default function CommunityPage() {
     }
   }, [members]);
 
+  const isOwner = useMemo(() => {
+    if (members) {
+      const isMember = members.data.find(
+        (el: any) => el.user.username === userStorage.get(),
+      );
+      return isMember && isMember.role === COMMUNITYMEMBER.OWNER;
+    }
+  }, [members]);
+
   const isPrivate = data?.data.type === COMMUNITYTYPE.PRIVATE;
 
   const { data: posts, isError: postsIsError } = useQuery({
@@ -116,6 +125,7 @@ export default function CommunityPage() {
               }}
               handleOpenModal={handleOpenModal}
               isOwnerOrMod={isOwnerOrMod}
+              isOwner={isOwner}
             />
             {!isPrivate && (
               <div className="px-5 flex gap-5 w-full bg-gray-900 py-2 rounded-lg overflow-y-auto">
@@ -135,7 +145,7 @@ export default function CommunityPage() {
                   className={`activeTab px-2 py-1 cursor-pointer select-none rounded-lg ${activeTab === "fotografije" ? "bg-green-800" : ""}`}
                   onClick={() => setActiveTab("fotografije")}
                 >
-                  Forografije
+                  Fotografije
                 </div>
 
                 {isOwnerOrMod && (
@@ -166,6 +176,20 @@ export default function CommunityPage() {
             {!isPrivate && activeTab === "fotografije" && (
               <div className="w-full space-y-5">
                 <PhotoList photos={photos} />
+              </div>
+            )}
+            {!isPrivate && activeTab === "podesavanja" && (
+              <div className="w-full space-y-5 bg-gray-900 h-full rounded-lg">
+                <div className="h-full">
+                  <div className="flex p-3 gap-2 w-full justify-end items-end h-full">
+                    <button className="px-3 py-1 bg-red-800 border border-red-600 rounded-lg cursor-pointer">
+                      Izadji iz zajednice
+                    </button>
+                    <button className="px-3 py-1 bg-red-800 border border-red-600 rounded-lg cursor-pointer">
+                      Obrisi zajednicu
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
           </>

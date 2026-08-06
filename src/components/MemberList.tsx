@@ -4,8 +4,9 @@ import { useModal } from "../context/moda.context.use";
 import { IoClose } from "react-icons/io5";
 import { JoinRequestsList } from "./JoinRequestsList";
 import InviteMembers from "./InviteMembers";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../api/client";
+import { userStorage } from "../lib/userStorage";
 
 export default function MemberList({
   members,
@@ -20,6 +21,8 @@ export default function MemberList({
 }) {
   const navigate = useNavigate();
   const { openModal, closeModal } = useModal();
+  const username = userStorage.get();
+  const queryClient = useQueryClient();
 
   const { data, refetch } = useQuery({
     queryKey: ["send", "invites", communityId],
@@ -31,6 +34,22 @@ export default function MemberList({
       apiClient.delete(`/communities/${communityId}/invites/${inviteId}`),
     onSuccess: () => {
       refetch();
+    },
+  });
+
+  const {
+    mutate: makeModerator,
+    isPending: makeModeratorIsPending,
+    variables,
+  } = useMutation({
+    mutationFn: ({ userId, role }: { userId: string; role: string }) =>
+      apiClient.patch(`/communities/${communityId}/members/${userId}/role`, {
+        role: role,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["members", communitySlug, "full"],
+      });
     },
   });
 
@@ -74,6 +93,8 @@ export default function MemberList({
     );
   };
 
+  console.log("username", username);
+
   return (
     <div className="space-y-5">
       {isOwnerOrMod && (
@@ -96,7 +117,7 @@ export default function MemberList({
         <div className="space-y-3">
           <h3>Pending requests</h3>
           <div className="flex gap-1 flex-col">
-            {data?.data.map((invite) => (
+            {data?.data.map((invite: any) => (
               <div
                 key={invite.id}
                 className="w-full bg-black/60 p-3 2xl:p-2 rounded-lg border border-white/15 flex justify-between items-center"
@@ -121,7 +142,7 @@ export default function MemberList({
                     disabled={isPending}
                     className="text-xs px-3 py-1 bg-red-800 border border-red-600 rounded-lg cursor-pointer disabled:opacity-50"
                   >
-                    Remove request
+                    Obrisi zahtev
                   </button>
                 </div>
               </div>
@@ -132,20 +153,59 @@ export default function MemberList({
       {members.map((member) => (
         <div
           key={member.id}
-          className="w-full bg-black/60 p-3 2xl:p-5 rounded-lg border border-white/15 cursor-pointer"
-          onClick={() => navigate(`/profile/${member.user.username}`)}
+          className="w-full bg-black/60 p-3 2xl:p-5 rounded-lg border border-white/15 flex justify-between items-center"
         >
           <div className="text-sm mt-1 flex items-center gap-5">
             <img
               src={member.user.avatarUrl ? member.user.avatarUrl : ""}
-              className="bg-gray-600 w-8 h-8 rounded-full"
+              className="bg-gray-600 w-8 h-8 rounded-full cursor-pointer"
+              onClick={() => navigate(`/profile/${member.user.username}`)}
             />
-            <div>
+            <div
+              onClick={() => navigate(`/profile/${member.user.username}`)}
+              className="cursor-pointer"
+            >
               <div>{member.user.displayName}</div>
               <div>@{member.user.username}</div>
             </div>
-            <div>{member.user.email}</div>
+            <div className="px-2 py-1 bg-blue-800 border border-blue-600 rounded-lg">
+              {member.role}
+            </div>
           </div>
+          {username !== member.user.username && (
+            <div className="flex gap-2">
+              {member.role === "owner" && (
+                <button
+                  className="text-xs px-3 py-1 border border-red-600 bg-red-800 rounded-lg cursor-pointer disabled:opacity-50"
+                  onClick={() =>
+                    makeModerator({ userId: member.user.id, role: "member" })
+                  }
+                  disabled={
+                    makeModeratorIsPending &&
+                    variables.userId === member.user.id &&
+                    variables.role === "member"
+                  }
+                >
+                  Ukloni kao moderatora
+                </button>
+              )}
+              {member.role === "member" && (
+                <button
+                  disabled={
+                    makeModeratorIsPending &&
+                    variables.userId === member.user.id &&
+                    variables.role === "member"
+                  }
+                  onClick={() =>
+                    makeModerator({ userId: member.user.id, role: "moderator" })
+                  }
+                  className="text-xs px-3 py-1 border border-green-600 bg-green-800 rounded-lg disabled:opacity-50 cursor-pointer"
+                >
+                  Postavi za moderatora
+                </button>
+              )}
+            </div>
+          )}
         </div>
       ))}
     </div>

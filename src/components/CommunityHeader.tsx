@@ -17,6 +17,7 @@ interface CommunityHeaderProps {
   onImageChange: (file: File) => void;
   handleOpenModal: () => void;
   isOwnerOrMod: boolean;
+  isOwner: boolean;
 }
 
 export const CommunityHeader = ({
@@ -25,12 +26,12 @@ export const CommunityHeader = ({
   onImageChange,
   handleOpenModal,
   isOwnerOrMod,
+  isOwner,
 }: CommunityHeaderProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const token = useAuthStore((s) => s.token);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  // const { openModal, closeModal } = useModal();
 
   const isRestricted = community.type === COMMUNITYTYPE.RESTRICTED;
   const isPrivate = community.type === COMMUNITYTYPE.PRIVATE;
@@ -119,26 +120,6 @@ export const CommunityHeader = ({
     e.target.value = "";
   };
 
-  // // const handleOpenJoinRequests = () => {
-  // //   return openModal(
-  // //     <div className="space-y-5">
-  // //       <div className="flex justify-between">
-  // //         <h2 className="text-2xl text-green-400">Zahtevi za pridruzivanje</h2>
-  // //         <button
-  // //           onClick={closeModal}
-  // //           className="text-red-500 cursor-pointer text-xl font-bold"
-  // //         >
-  // //           <IoClose size={30} />
-  // //         </button>
-  // //       </div>
-  // //       <JoinRequestsList
-  // //         communityId={community.id}
-  // //         communitySlug={community.slug}
-  // //       />
-  // //     </div>,
-  // //   );
-  // // };
-
   return (
     <>
       <div className="w-full h-fit flex flex-wrap justify-center gap-5">
@@ -203,7 +184,7 @@ export const CommunityHeader = ({
                       >
                         Odjavi se
                       </button>
-                      {isOwnerOrMod && (
+                      {isOwner && (
                         <button
                           className="bg-red-800 border border-red-600 px-3 h-7 text-nowrap 2xl:h-10 rounded-lg cursor-pointer select-none"
                           disabled={deletePending}
