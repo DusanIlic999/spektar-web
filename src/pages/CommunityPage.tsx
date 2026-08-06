@@ -1,18 +1,23 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { apiClient } from "../api/client";
-import { Spinner } from "../components/Spinner";
 import { useModal } from "../context/moda.context.use";
 import { CreatePostForm } from "../components/CreatePostForm";
 import { IoClose } from "react-icons/io5";
 import { CommunityHeader } from "../components/CommunityHeader";
 import { PostList } from "../components/PostList";
-import { COMMUNITYTYPE } from "../types/community";
+import { COMMUNITYMEMBER, COMMUNITYTYPE } from "../types/community";
+import { useMemo, useState } from "react";
+import { userStorage } from "../lib/userStorage";
+import MemberList from "../components/MemberList";
+import type { IPost } from "../types/post";
+import PhotoList from "../components/PhotoList";
 
 export default function CommunityPage() {
   const { openModal, closeModal } = useModal();
   const { slug } = useParams();
   const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = useState("objave");
 
   const { data, isFetching, isError, refetch } = useQuery({
     queryKey: ["community", slug, "full"],
@@ -41,7 +46,27 @@ export default function CommunityPage() {
     queryFn: () => apiClient.get(`/communities/${slug}/members`),
   });
 
+  const isOwnerOrMod = useMemo(() => {
+    if (members) {
+      const isMember = members.data.find(
+        (el: any) => el.user.username === userStorage.get(),
+      );
+      return isMember && isMember.role !== COMMUNITYMEMBER.MEMBER;
+    }
+  }, [members]);
+
   const isPrivate = data?.data.type === COMMUNITYTYPE.PRIVATE;
+
+  const { data: posts, isError: postsIsError } = useQuery({
+    queryKey: ["posts", slug],
+    queryFn: () => apiClient.get(`/posts/communities/${slug}/posts`),
+  });
+
+  const photos = useMemo(() => {
+    if (posts) {
+      return posts.data.filter((el: IPost) => el.imageUrl);
+    }
+  }, [posts]);
 
   if (isError || isErrorMembers) {
     return (
@@ -76,24 +101,71 @@ export default function CommunityPage() {
   };
 
   return (
-    <div className="flex flex-col w-full text-white p-5 pt-0 2xl:p-0 gap-3">
-      <div className="text-white w-full h-fit pb-5 rounded-2xl space-y-5">
+    <div className="flex flex-col w-full h-full text-white p-5 pt-0 2xl:p-0 gap-3">
+      <div className="text-white w-full h-full pb-5 rounded-2xl space-y-5">
         {isFetching || !data || isFetchingMembers || !members ? (
-          <Spinner />
+          <div></div>
         ) : (
           <>
             <CommunityHeader
               community={data.data}
-              members={members.data}
+              memberCount={members.data.length}
               onImageChange={(file) => {
                 uploadImageMutation.mutate(file);
                 refetch();
               }}
               handleOpenModal={handleOpenModal}
+              isOwnerOrMod={isOwnerOrMod}
             />
             {!isPrivate && (
+              <div className="px-5 flex gap-5 w-full bg-gray-900 py-2 rounded-lg overflow-y-auto">
+                <div
+                  className={`activeTab px-2 py-1 cursor-pointer select-none rounded-lg ${activeTab === "objave" ? "bg-green-800" : ""}`}
+                  onClick={() => setActiveTab("objave")}
+                >
+                  Objave
+                </div>
+                <div
+                  className={`activeTab px-2 py-1 cursor-pointer select-none rounded-lg ${activeTab === "clanovi" ? "bg-green-800" : ""}`}
+                  onClick={() => setActiveTab("clanovi")}
+                >
+                  Clanovi
+                </div>
+                <div
+                  className={`activeTab px-2 py-1 cursor-pointer select-none rounded-lg ${activeTab === "fotografije" ? "bg-green-800" : ""}`}
+                  onClick={() => setActiveTab("fotografije")}
+                >
+                  Forografije
+                </div>
+
+                {isOwnerOrMod && (
+                  <div
+                    className={`activeTab px-2 py-1 cursor-pointer select-none rounded-lg ${activeTab === "podesavanja" ? "bg-green-800" : ""}`}
+                    onClick={() => setActiveTab("podesavanja")}
+                  >
+                    Podesavanja
+                  </div>
+                )}
+              </div>
+            )}
+            {!isPrivate && posts && activeTab === "objave" && (
               <div className="w-full space-y-5">
-                <PostList />
+                <PostList posts={posts.data} isError={postsIsError} />
+              </div>
+            )}
+            {!isPrivate && activeTab === "clanovi" && (
+              <div className="w-full space-y-5">
+                <MemberList
+                  members={members.data}
+                  communityId={data.data.id}
+                  communitySlug={data.data.slug}
+                  isOwnerOrMod={isOwnerOrMod}
+                />
+              </div>
+            )}
+            {!isPrivate && activeTab === "fotografije" && (
+              <div className="w-full space-y-5">
+                <PhotoList photos={photos} />
               </div>
             )}
           </>

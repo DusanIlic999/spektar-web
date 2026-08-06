@@ -1,6 +1,6 @@
 import { PostCard } from "./PostCard";
 import { useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../api/client";
 import type { IPost } from "../types/post";
 import { PiMailboxLight } from "react-icons/pi";
@@ -9,7 +9,13 @@ import { useAuthStore } from "../store/authStore";
 export interface UpVotePayload {
   id: string;
 }
-export const PostList = () => {
+export const PostList = ({
+  posts,
+  isError,
+}: {
+  posts: any;
+  isError: boolean;
+}) => {
   const { slug } = useParams();
   const token = useAuthStore((s) => s.token);
 
@@ -33,11 +39,6 @@ export const PostList = () => {
     },
   });
 
-  const { data, isError } = useQuery({
-    queryKey: ["posts", slug],
-    queryFn: () => apiClient.get(`/posts/communities/${slug}/posts`),
-  });
-
   if (isError) {
     return (
       <div className="flex flex-col items-center mt-5">
@@ -56,8 +57,8 @@ export const PostList = () => {
 
   return (
     <>
-      {data && data.data && data.data.length ? (
-        data.data.map((post: IPost) => (
+      {posts && posts && posts.length ? (
+        posts.map((post: IPost) => (
           <PostCard
             key={post.id}
             post={post}

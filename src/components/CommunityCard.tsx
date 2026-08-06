@@ -78,7 +78,7 @@ export const CommunityCard = ({
             src={
               community.coverImageUrl
                 ? community.coverImageUrl
-                : "/public/black-placeholder.jpg"
+                : "/black-placeholder.jpg"
             }
             className="w-full h-full aspect-square object-cover rounded-l-2xl"
           />

@@ -4,7 +4,7 @@ export const Thumbnail = () => {
   return (
     <div className="w-full relative max-h-60 rounded-2xl bg-gray-500">
       <img
-        src="/public/thumbnail.jpg"
+        src="/thumbnail.jpg"
         className="object-cover h-40 2xl:h-60 w-full rounded-2xl select-none"
       />
       <div className="text-white z-20 absolute rounded-2xl top-0 opacity-100 w-full h-full bg-gradient-to-b from-transparent to-black"></div>

@@ -94,10 +94,10 @@ export default function PostPage() {
           <p>{data?.data.content}</p>
         </div>
         {data?.data.imageUrl && (
-          <div className="h-75 w-full flex">
+          <div className="h-full max-h-100 w-full flex">
             <img
               src={data?.data.imageUrl}
-              className="w-full h-full object-cover rounded"
+              className="w-full object-contain rounded"
             />
           </div>
         )}

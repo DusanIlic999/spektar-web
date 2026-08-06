@@ -29,7 +29,7 @@ export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
         </div>
       )}
       <div
-        className={`flex w-full ${post.imageUrl ? "p-2 pb-2 lg:p-5 lg:pl-0 2xl:w-7/10" : "p-2 pr-2 pb-2 2xl:p-5 w-full"}`}
+        className={`flex w-full ${post.imageUrl ? "p-2 pb-2 lg:p-5 2xl:w-7/10" : "p-2 pr-2 pb-2 2xl:p-5 w-full"}`}
       >
         <div className="flex justify-between w-full flex-col gap-2">
           <div className="space-y-2 h-full">
@@ -45,7 +45,12 @@ export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
                 {post.author.displayName}{" "}
               </div>
               &middot;{" "}
-              <span className="font-semibold">{post.community.name}</span>
+              <span
+                className="font-semibold cursor-pointer"
+                onClick={() => navigate(`/community/${post.community.slug}`)}
+              >
+                {post.community.name}
+              </span>
             </div>
             <div className="flex justify-between pr-2 gap-4">
               <h3

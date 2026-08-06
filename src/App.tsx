@@ -3,7 +3,6 @@ import "./App.css";
 import { lazy, Suspense } from "react";
 import { Layout } from "./components/Layout";
 import { Fallback } from "./components/fallback/Fallback";
-import ScrollToTop from "./components/ScrollToTop";
 
 const HomePage = lazy(() =>
   import("./pages").then((module) => ({ default: module.HomePage })),

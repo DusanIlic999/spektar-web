@@ -59,7 +59,7 @@ export const Header = () => {
             onClick={() => setIsModalOpen(true)}
           />
           <img
-            src="/public/icons.png"
+            src="/icons.png"
             className="h-8 w-20 object-cover select-none"
           />
           <div className="flex items-end gap-1 -ml-1 select-none">

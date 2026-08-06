@@ -42,10 +42,7 @@ export const JoinRequestsList = ({
       invalidate();
     },
     onError: () =>
-      toast.error(
-        "Greska",
-        "Neuspesno odobravanje zahteva, pokusajte ponovo.",
-      ),
+      toast.error("Greska", "Neuspesno odobravanje zahteva, pokusajte ponovo."),
   });
 
   const { mutate: reject, isPending: rejectPending } = useMutation({
@@ -62,7 +59,11 @@ export const JoinRequestsList = ({
   });
 
   if (isFetching) {
-    return <Spinner />;
+    return (
+      <div className="h-50">
+        <Spinner />
+      </div>
+    );
   }
 
   if (isError) {
@@ -88,7 +89,7 @@ export const JoinRequestsList = ({
         >
           <div className="flex items-center gap-3">
             <img
-              src={request.user.avatarUrl || "/public/black-placeholder.jpg"}
+              src={request.user.avatarUrl || "./black-placeholder.jpg"}
               className="w-10 h-10 rounded-full object-cover"
             />
             <div>

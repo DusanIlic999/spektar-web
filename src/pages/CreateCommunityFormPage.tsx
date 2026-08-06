@@ -27,6 +27,7 @@ export default function CreateCommunityFormPage() {
       form.resetFields();
       navigate("/communities");
       queryClient.invalidateQueries({ queryKey: ["communities"] });
+      queryClient.invalidateQueries({ queryKey: ["my-communities"] });
     },
     onError: () =>
       toast.error(

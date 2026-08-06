@@ -15,7 +15,7 @@ export const Posts = ({
   postType: TPostType | "all";
   postStatus: TPostStatus;
 }) => {
-  const { data, isFetching, isError } = useQuery<IArrayData<IPost>>({
+  const { data } = useQuery<IArrayData<IPost>>({
     queryKey: ["public-posts"],
     queryFn: () => apiClient.get(`/posts/public/all`),
   });

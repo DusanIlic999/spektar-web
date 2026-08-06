@@ -14,7 +14,7 @@ export default function CommunitesPage() {
   const debounce = useDebounce(search, 600);
   const token = useAuthStore((s) => s.token);
 
-  const { data, isFetching, isError } = useQuery<IArrayData<ICommunity>>({
+  const { data, isError } = useQuery<IArrayData<ICommunity>>({
     queryKey: ["communities"],
     queryFn: () =>
       apiClient.get(token ? "/communities" : "/communities/public"),

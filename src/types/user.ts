@@ -13,3 +13,22 @@ export interface IUser {
   bio: string | null;
   currentUser?: boolean;
 }
+
+export interface IMember {
+  id: string;
+  joinedAt: string;
+  role: string;
+  user: {
+    id: string;
+    email: string;
+    username: string;
+    avatarFileId: string;
+    avatarUrl: string;
+    bio: string;
+    createdAt: string;
+    displayName: string;
+    isEmailVerified: boolean;
+    passwordHash: string;
+    updatedAt: string;
+  };
+}

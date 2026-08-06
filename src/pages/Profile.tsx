@@ -7,7 +7,6 @@ import type { IPost } from "../types/post";
 import { PostCard } from "../components/PostCard";
 import type { UpVotePayload } from "../components/PostList";
 import { useNavigate, useParams } from "react-router-dom";
-import { IoIosArrowBack } from "react-icons/io";
 import { userStorage } from "../lib/userStorage";
 import { useAuthStore } from "../store/authStore";
 

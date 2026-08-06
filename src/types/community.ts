@@ -53,6 +53,13 @@ export interface IJoinRequest {
   };
 }
 
+export interface IInvitableUser {
+  id: string;
+  username: string;
+  displayName: string;
+  avatarUrl?: string | null;
+}
+
 export const COMMUNITY_TYPE_STYLE: Record<TCommunityType, string> = {
   [COMMUNITYTYPE.PUBLIC]: "bg-emerald-500/15 text-emerald-400",
   [COMMUNITYTYPE.RESTRICTED]: "bg-amber-500/15 text-amber-400",
