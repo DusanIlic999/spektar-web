@@ -71,9 +71,12 @@ export const CommunityCard = ({
   const isPrivate = community.type === COMMUNITYTYPE.PRIVATE;
 
   return (
-    <div className="w-full h-[200px] bg-black/60 rounded-2xl flex gap-5 border border-white/15">
+    <div className="w-full h-[200px] bg-white/5 rounded-2xl flex gap-5 border border-white/15">
       {community.coverImageUrl && (
-        <div className="relative w-3/10 hidden 2xl:block">
+        <div
+          className="relative w-3/10 hidden 2xl:block cursor-pointer"
+          onClick={() => navigate(`/community/${community.slug}`)}
+        >
           <img
             src={
               community.coverImageUrl

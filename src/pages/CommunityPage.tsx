@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { apiClient } from "../api/client";
 import { useModal } from "../context/moda.context.use";
 import { CreatePostForm } from "../components/CreatePostForm";
@@ -7,7 +7,7 @@ import { IoClose } from "react-icons/io5";
 import { CommunityHeader } from "../components/CommunityHeader";
 import { PostList } from "../components/PostList";
 import { COMMUNITYMEMBER, COMMUNITYTYPE } from "../types/community";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { userStorage } from "../lib/userStorage";
 import MemberList from "../components/MemberList";
 import type { IPost } from "../types/post";
@@ -18,6 +18,16 @@ export default function CommunityPage() {
   const { slug } = useParams();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("objave");
+  const location = useLocation();
+
+  const isUserActive = userStorage.get();
+
+  useEffect(() => {
+    const handleActiveTabReset = () => {
+      setActiveTab("objave");
+    };
+    handleActiveTabReset();
+  }, [location.pathname]);
 
   const { data, isFetching, isError, refetch } = useQuery({
     queryKey: ["community", slug, "full"],
@@ -61,6 +71,15 @@ export default function CommunityPage() {
         (el: any) => el.user.username === userStorage.get(),
       );
       return isMember && isMember.role === COMMUNITYMEMBER.OWNER;
+    }
+  }, [members]);
+
+  const isMember = useMemo(() => {
+    if (members) {
+      const isMember = members.data.find(
+        (el: any) => el.user.username === userStorage.get(),
+      );
+      return isMember;
     }
   }, [members]);
 
@@ -127,7 +146,7 @@ export default function CommunityPage() {
               isOwnerOrMod={isOwnerOrMod}
               isOwner={isOwner}
             />
-            {!isPrivate && (
+            {isUserActive && isMember && (
               <div className="px-5 flex gap-5 w-full bg-gray-900 py-2 rounded-lg overflow-y-auto">
                 <div
                   className={`activeTab px-2 py-1 cursor-pointer select-none rounded-lg ${activeTab === "objave" ? "bg-green-800" : ""}`}
@@ -135,12 +154,14 @@ export default function CommunityPage() {
                 >
                   Objave
                 </div>
-                <div
-                  className={`activeTab px-2 py-1 cursor-pointer select-none rounded-lg ${activeTab === "clanovi" ? "bg-green-800" : ""}`}
-                  onClick={() => setActiveTab("clanovi")}
-                >
-                  Clanovi
-                </div>
+                {isUserActive && (
+                  <div
+                    className={`activeTab px-2 py-1 cursor-pointer select-none rounded-lg ${activeTab === "clanovi" ? "bg-green-800" : ""}`}
+                    onClick={() => setActiveTab("clanovi")}
+                  >
+                    Clanovi
+                  </div>
+                )}
                 <div
                   className={`activeTab px-2 py-1 cursor-pointer select-none rounded-lg ${activeTab === "fotografije" ? "bg-green-800" : ""}`}
                   onClick={() => setActiveTab("fotografije")}
@@ -160,10 +181,13 @@ export default function CommunityPage() {
             )}
             {!isPrivate && posts && activeTab === "objave" && (
               <div className="w-full space-y-5">
-                <PostList posts={posts.data} isError={postsIsError} />
+                <PostList
+                  posts={posts.data}
+                  isError={postsIsError}
+                />
               </div>
             )}
-            {!isPrivate && activeTab === "clanovi" && (
+            {!isPrivate && isUserActive && activeTab === "clanovi" && (
               <div className="w-full space-y-5">
                 <MemberList
                   members={members.data}

@@ -1,27 +1,46 @@
-import { FaArrowDown, FaArrowUp } from "react-icons/fa";
+import { FaArrowDown, FaArrowUp, FaBookmark } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { TYPE_LABELS, type IPost } from "../types/post";
 import { useAuthStore } from "../store/authStore";
 import { useTruncate } from "../lib/useTruncate";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "../api/client";
 
 interface PostCardProps {
   post: IPost;
   onUpvote: (id: string) => void;
   onDownvote: (id: string) => void;
+  slug?: string
 }
 
 export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
   const navigate = useNavigate();
   const token = useAuthStore((s) => s.token);
+  const queryClient = useQueryClient();
 
   const { text, isTruncated } = useTruncate(post.content);
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: () => apiClient.post(`/posts/${post.id}/save`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          ["posts", "public-posts", "search-posts", "post", "user", 'saved'].includes(
+            query.queryKey[0] as string,
+          ),
+      });
+    },
+  });
+
   return (
     <div
-      className={`w-full ${post.imageUrl ? "2xl:h-50" : "h-fit"} 2xl:max-h-50 bg-black/60 rounded-lg flex gap-5 border border-white/15`}
+      className={`w-full ${post.imageUrl ? "2xl:h-50" : "h-fit"} 2xl:max-h-50 bg-white/5 rounded-lg flex gap-5 border border-white/15`}
     >
       {post.imageUrl && (
-        <div className="relative w-3/10 hidden 2xl:flex">
+        <div
+          className="relative w-3/10 hidden 2xl:flex cursor-pointer"
+          onClick={() => navigate(`/post/${post.id}`)}
+        >
           <img
             src={post.imageUrl}
             className="w-full h-full aspect-square object-cover rounded-l-lg"
@@ -33,24 +52,35 @@ export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
       >
         <div className="flex justify-between w-full flex-col gap-2">
           <div className="space-y-2 h-full">
-            <div className="text-sm mt-1 flex items-center gap-2">
-              <img
-                src={post.author.avatarUrl ? post.author.avatarUrl : ""}
-                className="bg-gray-600 w-6 h-6 rounded-full"
-              />
-              <div
-                onClick={() => navigate(`/profile/${post.author.username}`)}
-                className="cursor-pointer"
-              >
-                {post.author.displayName}{" "}
+            <div className="flex justify-between">
+              <div className="text-sm mt-1 flex items-center gap-2">
+                <img
+                  src={post.author.avatarUrl ? post.author.avatarUrl : ""}
+                  className="bg-gray-600 w-6 h-6 rounded-full object-cover"
+                />
+                <div
+                  onClick={() => navigate(`/profile/${post.author.username}`)}
+                  className="cursor-pointer"
+                >
+                  {post.author.displayName}{" "}
+                </div>
+                &middot;{" "}
+                <span
+                  className="font-semibold cursor-pointer"
+                  onClick={() => navigate(`/community/${post.community.slug}`)}
+                >
+                  {post.community.name}
+                </span>
               </div>
-              &middot;{" "}
-              <span
-                className="font-semibold cursor-pointer"
-                onClick={() => navigate(`/community/${post.community.slug}`)}
-              >
-                {post.community.name}
-              </span>
+              <div>
+                <FaBookmark
+                  color={post.saved ? "green" : "gray"}
+                  onClick={() => token && !isPending && mutate()}
+                  className={
+                    token ? "cursor-pointer" : "cursor-not-allowed opacity-50"
+                  }
+                />
+              </div>
             </div>
             <div className="flex justify-between pr-2 gap-4">
               <h3

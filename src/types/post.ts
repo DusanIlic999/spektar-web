@@ -29,6 +29,7 @@ export interface IPost {
   type: TPostType;
   updatedAt: string;
   upvoteCount: number;
+  saved: boolean;
 }
 
 export const TYPE_LABELS: Record<TPostType, string> = {

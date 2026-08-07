@@ -2,13 +2,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../api/client";
 import type { IData } from "../types/api";
 import type { IUser } from "../types/user";
-import { IoPersonOutline } from "react-icons/io5";
+import { IoChatbubblesOutline, IoPersonOutline } from "react-icons/io5";
 import type { IPost } from "../types/post";
 import { PostCard } from "../components/PostCard";
 import type { UpVotePayload } from "../components/PostList";
 import { useNavigate, useParams } from "react-router-dom";
 import { userStorage } from "../lib/userStorage";
 import { useAuthStore } from "../store/authStore";
+import { chatKeys } from "../types/chat";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -41,6 +42,20 @@ export default function Profile() {
     },
   });
 
+  const startConversationMutation = useMutation({
+    mutationFn: async (recipientId: string) => {
+      const { data: conversation } = await apiClient.post<{ id: string }>(
+        "/chat/conversations",
+        { recipientId },
+      );
+      return conversation;
+    },
+    onSuccess: (conversation) => {
+      queryClient.invalidateQueries({ queryKey: chatKeys.conversations() });
+      navigate(`/chat/${conversation.id}`);
+    },
+  });
+
   return (
     <div className="w-full h-fit text-white p-3 2xl:pl-0">
       <div className="w-full flex gap-5 bg-black/80 p-3 2xl:p-5 rounded-2xl border border-white/15 justify-between">
@@ -50,7 +65,7 @@ export default function Profile() {
               <div>
                 <img
                   src={data?.data.avatarUrl}
-                  className="h-20 w-20 rounded-full"
+                  className="h-20 w-20 rounded-full object-cover"
                 />
               </div>
             ) : (
@@ -81,6 +96,21 @@ export default function Profile() {
                   }
                 >
                   Edit
+                </button>
+              </div>
+            )}
+            {token && data?.data.username && isCurrentUser !== data.data.username && (
+              <div className="self-start pt-2 2xl:pt-0 2xl:self-end flex gap-2">
+                <button
+                  className="px-3 py-1 bg-green-800 border border-green-400 rounded-lg cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={startConversationMutation.isPending}
+                  onClick={() =>
+                    data?.data.id &&
+                    startConversationMutation.mutate(data.data.id)
+                  }
+                >
+                  <IoChatbubblesOutline size={16} />
+                  Pošalji poruku
                 </button>
               </div>
             )}

@@ -25,17 +25,7 @@ export const SideBar = ({ mobile = false }: { mobile?: boolean }) => {
           <div className="h-7 rounded-full bottom-1/2 translate-y-1/2 w-1 left-0 absolute bg-green-500"></div>
         )}
         <IoHomeOutline size={"19"} />
-        Dashboard
-      </Link>
-      <Link
-        to={"/tranding"}
-        className={`relative flex gap-3 ${pathname == "/tranding" ? "bg-green-400/40 text-green-400" : "text-gray-400"} items-center p-3 pl-5 font-semibold`}
-      >
-        {pathname == "/tranding" && (
-          <div className="h-7 rounded-full bottom-1/2 translate-y-1/2 w-1 left-0 absolute bg-green-500"></div>
-        )}
-        <AiOutlineFire size={"19"} />
-        Tranding
+        Pocetna
       </Link>
       <Link
         to={"/saved"}
@@ -45,7 +35,7 @@ export const SideBar = ({ mobile = false }: { mobile?: boolean }) => {
           <div className="h-7 rounded-full bottom-1/2 translate-y-1/2 w-1 left-0 absolute bg-green-500"></div>
         )}
         <IoBookmarkOutline size={"19"} />
-        Saved
+        Sacuvano
       </Link>
       {token && (
         <>
@@ -57,7 +47,7 @@ export const SideBar = ({ mobile = false }: { mobile?: boolean }) => {
               <div className="h-7 rounded-full bottom-1/2 translate-y-1/2 w-1 left-0 absolute bg-green-500"></div>
             )}
             <AiOutlineBell size={"19"} />
-            Notification
+            Obavestenja
           </Link>
           <Link
             to={"/chat"}
@@ -67,7 +57,7 @@ export const SideBar = ({ mobile = false }: { mobile?: boolean }) => {
               <div className="h-7 rounded-full bottom-1/2 translate-y-1/2 w-1 left-0 absolute bg-green-500"></div>
             )}
             <IoChatbubblesOutline size={"19"} />
-            Chat
+            Razgovori
           </Link>
         </>
       )}
@@ -79,7 +69,7 @@ export const SideBar = ({ mobile = false }: { mobile?: boolean }) => {
           <div className="h-7 rounded-full bottom-1/2 translate-y-1/2 w-1 left-0 absolute bg-green-500"></div>
         )}
         <IoIosSearch size={"19"} />
-        Search
+        Pretraga
       </Link>
       <Link
         to={"/settings"}
@@ -89,7 +79,7 @@ export const SideBar = ({ mobile = false }: { mobile?: boolean }) => {
           <div className="h-7 rounded-full bottom-1/2 translate-y-1/2 w-1 left-0 absolute bg-green-500"></div>
         )}
         <PiGearSixLight size={"19"} />
-        Settings
+        Podesavanja
       </Link>
     </div>
   );

@@ -2,12 +2,13 @@ import { IoPersonOutline } from "react-icons/io5";
 import { useModal } from "../context/moda.context.use";
 import { toast } from "../lib/toast";
 import { useAuthStore } from "../store/authStore";
-import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
 import { useNavigate } from "react-router-dom";
 import { CiMenuBurger } from "react-icons/ci";
 import { MobileSideBar } from "./MobileSideBar";
 import { useState } from "react";
+import { userStorage } from "../lib/userStorage";
+import { LoginForm } from "./LoginForm";
 
 export const Header = () => {
   const { openModal, closeModal } = useModal();
@@ -18,6 +19,7 @@ export const Header = () => {
 
   const handleSignout = () => {
     clearToken();
+    userStorage.clear();
     toast.success("Usepsno ste se odjavili");
   };
 

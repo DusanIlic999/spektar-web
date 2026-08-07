@@ -134,7 +134,9 @@ export const CommunityHeader = ({
               className={`w-full max-h-70 ${community.coverImageUrl ? "h-full" : "h-0"} rounded-2xl object-cover aspect-video`}
             />
             {isOwnerOrMod && (
-              <div className="absolute top-2 right-4 w-fit h-fit cursor-pointer">
+              <div
+                className={`${community.coverImageUrl ? "absolute" : "ml-auto"} top-2 right-4 w-fit h-fit cursor-pointer`}
+              >
                 <input
                   ref={inputRef}
                   type="file"
@@ -147,7 +149,7 @@ export const CommunityHeader = ({
             )}
           </>
           <div
-            className={`${community.coverImageUrl && "lg:absolute bottom-0"} backdrop-blur-lg backdrop-brightness-50 px-5 py-1 text-white w-full flex flex-col gap-5 lg:flex-row h-fit items-center rounded-b-2xl`}
+            className={`${community.coverImageUrl && "lg:absolute bottom-0 backdrop-blur-lg backdrop-brightness-50"} px-5 py-1 text-white w-full flex flex-col gap-5 lg:flex-row h-fit items-center rounded-b-2xl`}
           >
             <div className="flex flex-col w-full h-full">
               <h3 className="text-2xl font-medium">{community.name}</h3>

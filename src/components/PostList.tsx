@@ -64,6 +64,7 @@ export const PostList = ({
             post={post}
             onUpvote={() => upVoteMutation.mutate({ id: post.id })}
             onDownvote={() => downVoteMutation.mutate({ id: post.id })}
+            slug={slug}
           />
         ))
       ) : (

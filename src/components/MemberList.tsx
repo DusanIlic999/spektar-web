@@ -37,6 +37,20 @@ export default function MemberList({
     },
   });
 
+  const startConversationMutation = useMutation({
+    mutationFn: async (recipientId: string) => {
+      const { data: conversation } = await apiClient.post<{ id: string }>(
+        "/chat/conversations",
+        { recipientId },
+      );
+      return conversation;
+    },
+    onSuccess: (conversation) => {
+      queryClient.invalidateQueries({ queryKey: chatKeys.conversations() });
+      navigate(`/chat/${conversation.id}`);
+    },
+  });
+
   const {
     mutate: makeModerator,
     isPending: makeModeratorIsPending,
@@ -174,7 +188,7 @@ export default function MemberList({
           </div>
           {username !== member.user.username && (
             <div className="flex gap-2">
-              {member.role === "owner" && (
+              {member.role === "mederator" && (
                 <button
                   className="text-xs px-3 py-1 border border-red-600 bg-red-800 rounded-lg cursor-pointer disabled:opacity-50"
                   onClick={() =>
@@ -189,7 +203,7 @@ export default function MemberList({
                   Ukloni kao moderatora
                 </button>
               )}
-              {member.role === "member" && (
+              {member.role === "member" && isOwnerOrMod && (
                 <button
                   disabled={
                     makeModeratorIsPending &&

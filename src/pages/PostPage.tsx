@@ -45,7 +45,7 @@ export default function PostPage() {
               <img
                 src={data?.data.author.avatarUrl}
                 alt="user avatar"
-                className="bg-gray-500 w-12 h-12 rounded-full"
+                className="bg-gray-500 w-12 h-12 rounded-full object-cover"
               />
             ) : (
               <div className="bg-gray-500 w-12 h-12 rounded-full" />
