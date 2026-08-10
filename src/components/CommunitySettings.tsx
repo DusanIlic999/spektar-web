@@ -24,7 +24,7 @@ export const CommunitySettings = ({
   const [type, setType] = useState(community.type);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { openModal, closeModal } = useModal();
+  const { openModal } = useModal();
   const currentUser = useCurrentUser();
 
   const makeOwner = useMutation({
@@ -74,26 +74,6 @@ export const CommunitySettings = ({
       toast.error(
         "Greska tokom izmene",
         "Desila se greska tokom izmene zajednice, proverite sa administratorom",
-      ),
-  });
-
-  const { mutate: disband, isPending: disbandPending } = useMutation({
-    mutationFn: () => {
-      return apiClient.post(`/communities/${community.id}/disband`);
-    },
-    onSuccess: () => {
-      toast.success("Vidimo se", "Uspesno ste se izasli iz zajednici.");
-      queryClient.invalidateQueries({
-        queryKey: ["community", community.slug, "full"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["members", community.slug, "full"],
-      });
-    },
-    onError: () =>
-      toast.error(
-        "Greska tokom izlaza iz zajednice",
-        "Desila se greska tokom izlaska iz zajednice, pokusajte ponovo ili pozovite administratora",
       ),
   });
 
