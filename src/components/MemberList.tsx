@@ -37,20 +37,6 @@ export default function MemberList({
     },
   });
 
-  const startConversationMutation = useMutation({
-    mutationFn: async (recipientId: string) => {
-      const { data: conversation } = await apiClient.post<{ id: string }>(
-        "/chat/conversations",
-        { recipientId },
-      );
-      return conversation;
-    },
-    onSuccess: (conversation) => {
-      queryClient.invalidateQueries({ queryKey: chatKeys.conversations() });
-      navigate(`/chat/${conversation.id}`);
-    },
-  });
-
   const {
     mutate: makeModerator,
     isPending: makeModeratorIsPending,
@@ -172,7 +158,7 @@ export default function MemberList({
           <div className="text-sm mt-1 flex items-center gap-5">
             <img
               src={member.user.avatarUrl ? member.user.avatarUrl : ""}
-              className="bg-gray-600 w-8 h-8 rounded-full cursor-pointer"
+              className="bg-gray-600 w-8 h-8 rounded-full cursor-pointer object-cover"
               onClick={() => navigate(`/profile/${member.user.username}`)}
             />
             <div

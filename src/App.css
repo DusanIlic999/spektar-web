@@ -58,6 +58,9 @@
   margin-top: 8px;
   margin-left: -10px;
   padding: 6px;
+  position: relative;
+  min-height: 190px;
+  top: -245px;
   position-area: block-end;
   position-try-fallbacks: none;
 }
@@ -168,3 +171,42 @@
   box-shadow: none;
 }
 
+.checkbox {
+  appearance: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.25rem;
+  background-color: #000000a2;
+  border: 1px solid #000;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+/* checkmark preko pseudo-elementa, skaliran na 0 dok nije checked */
+.checkbox::before {
+  content: "";
+  width: 0.625rem;
+  height: 0.625rem;
+  transform: scale(0);
+  transition: transform 120ms ease;
+  background-color: #000;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+.checkbox:checked {
+  background-color: #22c55e;
+  border-color: #22c55e;
+}
+
+.checkbox:checked::before {
+  transform: scale(1);
+}
+
+.checkbox:focus-visible {
+  outline: 2px solid #22c55e;
+  outline-offset: 2px;
+}

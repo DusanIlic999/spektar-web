@@ -6,12 +6,13 @@ import { CreatePostForm } from "../components/CreatePostForm";
 import { IoClose } from "react-icons/io5";
 import { CommunityHeader } from "../components/CommunityHeader";
 import { PostList } from "../components/PostList";
-import { COMMUNITYMEMBER, COMMUNITYTYPE } from "../types/community";
+import { COMMUNITYMEMBER } from "../types/community";
 import { useEffect, useMemo, useState } from "react";
 import { userStorage } from "../lib/userStorage";
 import MemberList from "../components/MemberList";
 import type { IPost } from "../types/post";
 import PhotoList from "../components/PhotoList";
+import { CommunitySettings } from "../components/CommunitySettings";
 
 export default function CommunityPage() {
   const { openModal, closeModal } = useModal();
@@ -29,7 +30,7 @@ export default function CommunityPage() {
     handleActiveTabReset();
   }, [location.pathname]);
 
-  const { data, isFetching, isError, refetch } = useQuery({
+  const { data, isError, refetch } = useQuery({
     queryKey: ["community", slug, "full"],
     queryFn: () => apiClient.get(`/communities/${slug}`),
   });
@@ -47,11 +48,7 @@ export default function CommunityPage() {
     },
   });
 
-  const {
-    data: members,
-    isFetching: isFetchingMembers,
-    isError: isErrorMembers,
-  } = useQuery({
+  const { data: members, isError: isErrorMembers } = useQuery({
     queryKey: ["members", slug, "full"],
     queryFn: () => apiClient.get(`/communities/${slug}/members`),
   });
@@ -83,9 +80,26 @@ export default function CommunityPage() {
     }
   }, [members]);
 
-  const isPrivate = data?.data.type === COMMUNITYTYPE.PRIVATE;
+  const tabs = [
+    { id: "objave", label: "Objave", visible: true },
+    { id: "clanovi", label: "Clanovi", visible: isUserActive },
+    { id: "fotografije", label: "Fotografije", visible: true },
+    { id: "podesavanja", label: "Podesavanja", visible: isOwnerOrMod },
+  ] as const;
 
-  const { data: posts, isError: postsIsError } = useQuery({
+  const visibleTabs = tabs.filter((t) => t.visible);
+
+  const currentTab = visibleTabs.some((t) => t.id === activeTab)
+    ? activeTab
+    : visibleTabs[0]?.id;
+
+  const canViewContent = data?.data.visibility !== "PRIVATE" || !!isMember;
+
+  const {
+    data: posts,
+    isFetching: postsIsLoading,
+    isError: postsIsError,
+  } = useQuery({
     queryKey: ["posts", slug],
     queryFn: () => apiClient.get(`/posts/communities/${slug}/posts`),
   });
@@ -131,9 +145,7 @@ export default function CommunityPage() {
   return (
     <div className="flex flex-col w-full h-full text-white p-5 pt-0 2xl:p-0 gap-3">
       <div className="text-white w-full h-full pb-5 rounded-2xl space-y-5">
-        {isFetching || !data || isFetchingMembers || !members ? (
-          <div></div>
-        ) : (
+        {data && members && slug && (
           <>
             <CommunityHeader
               community={data.data}
@@ -146,75 +158,54 @@ export default function CommunityPage() {
               isOwnerOrMod={isOwnerOrMod}
               isOwner={isOwner}
             />
-            {isUserActive && isMember && (
-              <div className="px-5 flex gap-5 w-full bg-gray-900 py-2 rounded-lg overflow-y-auto">
-                <div
-                  className={`activeTab px-2 py-1 cursor-pointer select-none rounded-lg ${activeTab === "objave" ? "bg-green-800" : ""}`}
-                  onClick={() => setActiveTab("objave")}
-                >
-                  Objave
-                </div>
-                {isUserActive && (
-                  <div
-                    className={`activeTab px-2 py-1 cursor-pointer select-none rounded-lg ${activeTab === "clanovi" ? "bg-green-800" : ""}`}
-                    onClick={() => setActiveTab("clanovi")}
-                  >
-                    Clanovi
-                  </div>
-                )}
-                <div
-                  className={`activeTab px-2 py-1 cursor-pointer select-none rounded-lg ${activeTab === "fotografije" ? "bg-green-800" : ""}`}
-                  onClick={() => setActiveTab("fotografije")}
-                >
-                  Fotografije
+            {canViewContent && (
+              <>
+                <div className="px-5 flex gap-5 w-full bg-gray-900 py-2 rounded-lg overflow-y-auto">
+                  {visibleTabs.map((tab) => (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`px-2 py-1 cursor-pointer select-none rounded-lg ${
+                        currentTab === tab.id ? "bg-green-800" : ""
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
                 </div>
 
-                {isOwnerOrMod && (
-                  <div
-                    className={`activeTab px-2 py-1 cursor-pointer select-none rounded-lg ${activeTab === "podesavanja" ? "bg-green-800" : ""}`}
-                    onClick={() => setActiveTab("podesavanja")}
-                  >
-                    Podesavanja
-                  </div>
-                )}
-              </div>
-            )}
-            {!isPrivate && posts && activeTab === "objave" && (
-              <div className="w-full space-y-5">
-                <PostList
-                  posts={posts.data}
-                  isError={postsIsError}
-                />
-              </div>
-            )}
-            {!isPrivate && isUserActive && activeTab === "clanovi" && (
-              <div className="w-full space-y-5">
-                <MemberList
-                  members={members.data}
-                  communityId={data.data.id}
-                  communitySlug={data.data.slug}
-                  isOwnerOrMod={isOwnerOrMod}
-                />
-              </div>
-            )}
-            {!isPrivate && activeTab === "fotografije" && (
-              <div className="w-full space-y-5">
-                <PhotoList photos={photos} />
-              </div>
-            )}
-            {!isPrivate && activeTab === "podesavanja" && (
-              <div className="w-full space-y-5 bg-gray-900 h-full rounded-lg">
-                <div className="h-full">
-                  <div className="flex p-3 gap-2 w-full justify-end items-end h-full">
-                    <button className="px-3 py-1 bg-red-800 border border-red-600 rounded-lg cursor-pointer">
-                      Izadji iz zajednice
-                    </button>
-                    <button className="px-3 py-1 bg-red-800 border border-red-600 rounded-lg cursor-pointer">
-                      Obrisi zajednicu
-                    </button>
-                  </div>
+                <div className="w-full space-y-5">
+                  {currentTab === "objave" &&
+                    (postsIsError ? (
+                      <div className="text-red-400">
+                        Neuspelo učitavanje objava.
+                      </div>
+                    ) : postsIsLoading ? (
+                      <div>Učitavanje…</div>
+                    ) : (
+                      <PostList posts={posts?.data ?? []} isError={false} />
+                    ))}
+                  {currentTab === "clanovi" && (
+                    <MemberList
+                      members={members.data}
+                      communityId={data.data.id}
+                      communitySlug={data.data.slug}
+                      isOwnerOrMod={isOwnerOrMod}
+                    />
+                  )}
+                  {currentTab === "fotografije" && (
+                    <PhotoList photos={photos} />
+                  )}
+                  {currentTab === "podesavanja" && (
+                    <CommunitySettings
+                      community={data.data}
+                      members={members.data}
+                      slug={slug}
+                    />
+                  )}
                 </div>
-              </div>
+              </>
             )}
           </>
         )}

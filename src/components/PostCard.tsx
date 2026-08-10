@@ -2,15 +2,15 @@ import { FaArrowDown, FaArrowUp, FaBookmark } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { TYPE_LABELS, type IPost } from "../types/post";
 import { useAuthStore } from "../store/authStore";
-import { useTruncate } from "../lib/useTruncate";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../api/client";
+import { truncate } from "../lib/useTruncate";
 
 interface PostCardProps {
   post: IPost;
   onUpvote: (id: string) => void;
   onDownvote: (id: string) => void;
-  slug?: string
+  slug?: string;
 }
 
 export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
@@ -18,16 +18,19 @@ export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
   const token = useAuthStore((s) => s.token);
   const queryClient = useQueryClient();
 
-  const { text, isTruncated } = useTruncate(post.content);
-
   const { mutate, isPending } = useMutation({
     mutationFn: () => apiClient.post(`/posts/${post.id}/save`),
     onSuccess: () => {
       queryClient.invalidateQueries({
         predicate: (query) =>
-          ["posts", "public-posts", "search-posts", "post", "user", 'saved'].includes(
-            query.queryKey[0] as string,
-          ),
+          [
+            "posts",
+            "public-posts",
+            "search-posts",
+            "post",
+            "user",
+            "saved",
+          ].includes(query.queryKey[0] as string),
       });
     },
   });
@@ -91,17 +94,7 @@ export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
               </h3>
             </div>
             <div>
-              <p className="-mt-1">
-                {text}
-                {isTruncated && (
-                  <span
-                    onClick={() => navigate(`/post/${post.id}`)}
-                    className="text-green-400 hover:underline cursor-pointer font-medium"
-                  >
-                    (Čitaj dalje)
-                  </span>
-                )}
-              </p>
+              <p className="-mt-1">{truncate(post.content, 100)}</p>
             </div>
           </div>
           <div

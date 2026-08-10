@@ -10,6 +10,7 @@ import { apiClient } from "../api/client";
 import { toast } from "../lib/toast";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { truncate } from "../lib/useTruncate";
 
 interface CommunityHeaderProps {
   community: ICommunity;
@@ -152,7 +153,9 @@ export const CommunityHeader = ({
             className={`${community.coverImageUrl && "lg:absolute bottom-0 backdrop-blur-lg backdrop-brightness-50"} px-5 py-1 text-white w-full flex flex-col gap-5 lg:flex-row h-fit items-center rounded-b-2xl`}
           >
             <div className="flex flex-col w-full h-full">
-              <h3 className="text-2xl font-medium">{community.name}</h3>
+              <h3 className="text-2xl font-medium">
+                {truncate(community.name, 25)}
+              </h3>
               <div className="flex gap-4">
                 <div className="flex gap-2 items-center">
                   <MdOutlinePersonOutline />

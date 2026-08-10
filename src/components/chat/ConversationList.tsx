@@ -16,7 +16,7 @@ export const ConversationList = ({ activeId }: { activeId?: string }) => {
   const { openModal, closeModal } = useModal();
   const queryClient = useQueryClient();
   const { data: conversations, isLoading } = useConversations();
-  const { data: users, isLoading: usersLoading } = useQuery<IArrayData<IUser>>({
+  const { data: users } = useQuery<IArrayData<IUser>>({
     queryFn: () => apiClient.get("/users/"),
     queryKey: ["users", "chat"],
   });

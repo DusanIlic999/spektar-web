@@ -24,7 +24,7 @@ export default function ProfileEditPage() {
       formData.append("displayName", values.displayName);
       formData.append("email", values.email);
       formData.append("username", values.username);
-      formData.append("bio", values.bio);
+      formData.append("bio", values.bio ? values.bio : "");
       if (image) {
         formData.append("image", image);
       }

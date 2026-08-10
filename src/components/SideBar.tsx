@@ -1,4 +1,4 @@
-import { AiOutlineBell, AiOutlineFire } from "react-icons/ai";
+import { AiOutlineBell } from "react-icons/ai";
 import { IoIosSearch } from "react-icons/io";
 import {
   IoBookmarkOutline,
@@ -8,10 +8,18 @@ import {
 import { PiGearSixLight } from "react-icons/pi";
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
+import { useQuery } from "@tanstack/react-query";
+import type { IArrayData } from "../types/api";
+import type { INotification } from "../types/notification";
+import { apiClient } from "../api/client";
 
 export const SideBar = ({ mobile = false }: { mobile?: boolean }) => {
   const { pathname } = useLocation();
   const token = useAuthStore((s) => s.token);
+  const { data } = useQuery<IArrayData<INotification>>({
+    queryKey: ["requests", "me"],
+    queryFn: () => apiClient.get("/communities/invites/me"),
+  });
 
   return (
     <div
@@ -45,6 +53,11 @@ export const SideBar = ({ mobile = false }: { mobile?: boolean }) => {
           >
             {pathname == "/notification" && (
               <div className="h-7 rounded-full bottom-1/2 translate-y-1/2 w-1 left-0 absolute bg-green-500"></div>
+            )}
+            {data && data.data.length > 0 && (
+              <div className="absolute px-2 -scale-75 top-1 rotate-180 left-7 rounded-full text-red-500 bg-red-800">
+                {data.data.length}
+              </div>
             )}
             <AiOutlineBell size={"19"} />
             Obavestenja
