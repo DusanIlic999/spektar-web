@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { lazy, Suspense } from "react";
 import { Layout } from "./components/Layout";
@@ -19,9 +19,9 @@ const SavedPage = lazy(() =>
 const SearchPage = lazy(() =>
   import("./pages").then((module) => ({ default: module.SearchPage })),
 );
-const SettingsPage = lazy(() =>
-  import("./pages").then((module) => ({ default: module.SettingsPage })),
-);
+// const SettingsPage = lazy(() =>
+//   import("./pages").then((module) => ({ default: module.SettingsPage })),
+// );
 const CreateCommunityFormPage = lazy(() =>
   import("./pages").then((module) => ({
     default: module.CreateCommunityFormPage,
@@ -50,14 +50,11 @@ function App() {
         <Route element={<Layout />}>
           <Route index element={<HomePage />}></Route>
           <Route path="/chat" element={<ChatPage />}></Route>
-          <Route
-            path="/chat/:conversationId"
-            element={<ChatPage />}
-          ></Route>
+          <Route path="/chat/:conversationId" element={<ChatPage />}></Route>
           <Route path="/notification" element={<NotificationPage />}></Route>
           <Route path="/saved" element={<SavedPage />}></Route>
           <Route path="/search" element={<SearchPage />}></Route>
-          <Route path="/settings" element={<SettingsPage />}></Route>
+          {/* <Route path="/settings" element={<SettingsPage />}></Route> */}
           <Route
             path="/create-community"
             element={<CreateCommunityFormPage />}
@@ -69,6 +66,7 @@ function App() {
           <Route path="/profile/:username" element={<Profile />}></Route>
           <Route path="/profile/edit" element={<ProfileEditPage />}></Route>
         </Route>
+        <Route path="*" element={<Navigate to={"/"} />}></Route>
       </Routes>
     </Suspense>
   );

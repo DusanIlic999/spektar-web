@@ -84,7 +84,7 @@ export const SideBar = ({ mobile = false }: { mobile?: boolean }) => {
         <IoIosSearch size={"19"} />
         Pretraga
       </Link>
-      <Link
+      {/* <Link
         to={"/settings"}
         className={`relative flex gap-3 ${pathname == "/settings" ? "bg-green-400/40 text-green-400" : "text-gray-400"} ${!mobile && "rounded-b-2xl"} items-center p-3 pl-5 font-semibold`}
       >
@@ -93,7 +93,7 @@ export const SideBar = ({ mobile = false }: { mobile?: boolean }) => {
         )}
         <PiGearSixLight size={"19"} />
         Podesavanja
-      </Link>
+      </Link> */}
     </div>
   );
 };

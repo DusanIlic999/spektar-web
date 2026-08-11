@@ -69,6 +69,7 @@ export const CommunitySettings = ({
       toast.success("Zajednica izmenjena", "Uspesno ste izmenili zajednicu!");
       form.resetFields();
       queryClient.invalidateQueries({ queryKey: ["community", slug, "full"] });
+      queryClient.invalidateQueries({ queryKey: ["communities"] });
     },
     onError: () =>
       toast.error(

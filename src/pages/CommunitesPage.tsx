@@ -41,6 +41,10 @@ export default function CommunitesPage() {
   const hasPendingRequest = (currentCommunity: ICommunity) => {
     return myJoinRequests?.data.includes(currentCommunity.id) ?? false;
   };
+  const myCommunityIds = useMemo(
+    () => new Set(myCommunities?.data.map((c) => c.id)),
+    [myCommunities?.data],
+  );
 
   const filteredCommunities = useMemo(() => {
     if (debounce.length > 0) {
@@ -48,7 +52,11 @@ export default function CommunitesPage() {
         community.name.toLowerCase().includes(debounce?.toLowerCase().trim()),
       );
     } else {
-      return data?.data;
+      return (
+        data?.data.filter(
+          (c: ICommunity) => c.type !== "private" || myCommunityIds.has(c.id),
+        ) ?? []
+      );
     }
   }, [debounce, data]);
 
