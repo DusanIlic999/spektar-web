@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { apiClient } from "../api/client";
 import { TYPE_LABELS, type IPost, type TPostType } from "../types/post";
 import type { IData } from "../types/api";
-import { FaArrowDown, FaArrowUp } from "react-icons/fa";
+import { FaAngleLeft, FaArrowDown, FaArrowUp } from "react-icons/fa";
 import type { UpVotePayload } from "../components/PostList";
 import { useAuthStore } from "../store/authStore";
 
@@ -38,6 +38,10 @@ export default function PostPage() {
 
   return (
     <div className="flex flex-col 2xl:w-full text-white gap-3">
+      <div className="flex gap-1 items-center cursor-pointer" onClick={() => navigate(-1)}>
+        <FaAngleLeft />
+        Back
+      </div>
       <div className="text-white w-full space-y-5 h-fit bg-black/60 rounded-2xl p-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

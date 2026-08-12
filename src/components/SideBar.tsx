@@ -5,7 +5,7 @@ import {
   IoChatbubblesOutline,
   IoHomeOutline,
 } from "react-icons/io5";
-import { PiGearSixLight } from "react-icons/pi";
+// import { PiGearSixLight } from "react-icons/pi";
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { useQuery } from "@tanstack/react-query";

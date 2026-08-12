@@ -63,6 +63,7 @@ export const Header = () => {
           <img
             src="/icons.png"
             className="h-8 w-20 object-cover select-none"
+            onClick={()=> navigate('/')}
           />
           <div className="flex items-end gap-1 -ml-1 select-none">
             <div className="font-extrabold hidden 2xl:block">Spektra</div>
