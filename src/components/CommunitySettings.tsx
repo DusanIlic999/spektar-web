@@ -119,8 +119,8 @@ export const CommunitySettings = ({
   };
 
   return (
-    <div className="w-full p-5 space-y-5 bg-gray-900 rounded-lg">
-      <div className="p-7 border border-white/25 rounded-lg bg-black/30">
+    <div className="w-full p-5 space-y-5 rounded-lg flex justify-center">
+      <div className="p-5 border border-white/15 text-xl font-bold py-4 rounded-2xl bg-black/80">
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Row gutter={12}>
             <Col span={24}>
@@ -244,35 +244,40 @@ export const CommunitySettings = ({
             </Form.Item>
           </Row>
           <Row justify={"end"}>
-            <button className="border border-green-600 bg-green-800 text-white px-3 py-1 rounded-sm cursor-pointer">
-              Sacuvaj
-            </button>
+            <div className="flex p-3 gap-2 w-full justify-end items-end h-full">
+              <button
+                type="button"
+                className="px-3 py-1 bg-red-800 border border-red-600 rounded-lg cursor-pointer text-white "
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (members.length === 1) {
+                    deleteCommunity.mutate();
+                  } else {
+                    handleOwnerDisband();
+                  }
+                }}
+              >
+                Izadji iz zajednice
+              </button>
+              <button
+                type="button"
+                className="px-3 py-1 bg-red-800 border border-red-600 rounded-lg cursor-pointer text-white "
+                onClick={(e) => {
+                  e.preventDefault();
+                  deleteCommunity.mutate();
+                }}
+              >
+                Obrisi zajednicu
+              </button>
+              <button
+                type="submit"
+                className="border border-green-600 bg-green-800 text-white px-3 py-1 rounded-sm cursor-pointer"
+              >
+                Sacuvaj
+              </button>
+            </div>
           </Row>
         </Form>
-      </div>
-      <div>
-        <div className="flex p-3 gap-2 w-full justify-end items-end h-full">
-          <button
-            className="px-3 py-1 bg-red-800 border border-red-600 rounded-lg cursor-pointer"
-            onClick={() => {
-              if (members.length === 1) {
-                deleteCommunity.mutate();
-              } else {
-                handleOwnerDisband();
-              }
-            }}
-          >
-            Izadji iz zajednice
-          </button>
-          <button
-            className="px-3 py-1 bg-red-800 border border-red-600 rounded-lg cursor-pointer"
-            onClick={() => {
-              deleteCommunity.mutate();
-            }}
-          >
-            Obrisi zajednicu
-          </button>
-        </div>
       </div>
     </div>
   );
