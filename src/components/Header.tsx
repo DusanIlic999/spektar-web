@@ -9,6 +9,7 @@ import { MobileSideBar } from "./MobileSideBar";
 import { useState } from "react";
 import { userStorage } from "../lib/userStorage";
 import { LoginForm } from "./LoginForm";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const Header = () => {
   const { openModal, closeModal } = useModal();
@@ -16,11 +17,14 @@ export const Header = () => {
   const navigate = useNavigate();
   const token = useAuthStore((s) => s.token);
   const clearToken = useAuthStore((s) => s.clearToken);
+  const queryClient = useQueryClient();
 
   const handleSignout = () => {
     clearToken();
     userStorage.clear();
     toast.success("Usepsno ste se odjavili");
+    navigate("/");
+    queryClient.refetchQueries();
   };
 
   const handleOpenModal = (registration: boolean) => {
@@ -63,7 +67,7 @@ export const Header = () => {
           <img
             src="/icons.png"
             className="h-8 w-20 object-cover select-none cursor-pointer"
-            onClick={()=> navigate('/')}
+            onClick={() => navigate("/")}
           />
           <div className="flex items-end gap-1 -ml-1 select-none">
             <div className="font-extrabold hidden 2xl:block">Spektra</div>
