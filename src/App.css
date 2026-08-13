@@ -59,8 +59,8 @@
   margin-left: -10px;
   padding: 6px;
   position: relative;
-  min-height: 190px;
-  top: -245px;
+  min-height: 90px;
+  top: -200px;
   position-area: block-end;
   position-try-fallbacks: none;
 }
