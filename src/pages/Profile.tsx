@@ -10,20 +10,35 @@ import { useNavigate, useParams } from "react-router-dom";
 import { userStorage } from "../lib/userStorage";
 import { useAuthStore } from "../store/authStore";
 import { chatKeys } from "../types/chat";
+import { MdOutlineImageSearch } from "react-icons/md";
+import { useRef } from "react";
 
 export default function Profile() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { username } = useParams();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const token = useAuthStore((s) => s.token);
   const isCurrentUser = userStorage.get();
 
-  const { data } = useQuery<IData<IUser>>({
+  const { data, refetch } = useQuery<IData<IUser>>({
     queryKey: ["user", username],
     queryFn: () => apiClient.get(username ? `/users/${username}` : "/users/me"),
   });
 
+  const uploadImageMutation = useMutation({
+    mutationFn: (file: File) => {
+      const formData = new FormData();
+      formData.append("image", file);
+      return apiClient.patch(`/users/image`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user", username] });
+    },
+  });
   const upVoteMutation = useMutation({
     mutationFn: ({ id }: UpVotePayload) => {
       return apiClient.post(`posts/${id}/vote`, { value: 1 });
@@ -56,10 +71,49 @@ export default function Profile() {
     },
   });
 
+  const handleIconClick = () => {
+    inputRef.current?.click();
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      uploadImageMutation.mutate(file);
+      refetch();
+    }
+    e.target.value = "";
+  };
+
   return (
     <div className="w-full h-fit text-white p-3 2xl:pl-0">
-      <div className="w-full flex gap-5 bg-black/80 p-3 2xl:p-5 rounded-2xl border border-white/15 justify-between">
-        <div className="flex flex-col gap-2 w-full">
+      <div className="w-full bg-black/80 p-3 2xl:p-5 rounded-2xl border border-white/15 ">
+        <>
+          <img
+            src={
+              data?.data.coverUrl
+                ? data.data.coverUrl
+                : "/black-placeholder.jpg"
+            }
+            className={`w-full max-h-70 ${data?.data.coverUrl ? "h-full" : "h-0"} max-h-80 rounded-2xl object-cover aspect-video`}
+          />
+          {data && isCurrentUser === data.data.username && (
+            <div
+              className={`${data.data.coverUrl ? "ml-auto relative -top-10" : "ml-auto"} right-4 w-fit h-fit cursor-pointer`}
+            >
+              <input
+                ref={inputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleChange}
+              />
+              <MdOutlineImageSearch size={30} onClick={handleIconClick} />
+            </div>
+          )}
+        </>
+        <div
+          className={`flex flex-col gap-2 w-full ${data?.data.coverUrl && "relative -top-12"}`}
+        >
           <div className="flex gap-10">
             {data?.data.avatarUrl && data.data.avatarUrl.length > 0 ? (
               <div>
@@ -99,21 +153,23 @@ export default function Profile() {
                 </button>
               </div>
             )}
-            {token && data?.data.username && isCurrentUser !== data.data.username && (
-              <div className="self-start pt-2 2xl:pt-0 2xl:self-end flex gap-2">
-                <button
-                  className="px-3 py-1 bg-green-800 border border-green-400 rounded-lg cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={startConversationMutation.isPending}
-                  onClick={() =>
-                    data?.data.id &&
-                    startConversationMutation.mutate(data.data.id)
-                  }
-                >
-                  <IoChatbubblesOutline size={16} />
-                  Pošalji poruku
-                </button>
-              </div>
-            )}
+            {token &&
+              data?.data.username &&
+              isCurrentUser !== data.data.username && (
+                <div className="self-start pt-2 2xl:pt-0 2xl:self-end flex gap-2">
+                  <button
+                    className="px-3 py-1 bg-green-800 border border-green-400 rounded-lg cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={startConversationMutation.isPending}
+                    onClick={() =>
+                      data?.data.id &&
+                      startConversationMutation.mutate(data.data.id)
+                    }
+                  >
+                    <IoChatbubblesOutline size={16} />
+                    Pošalji poruku
+                  </button>
+                </div>
+              )}
           </div>
         </div>
       </div>

@@ -12,6 +12,7 @@ export interface IUser {
   username: string;
   bio: string | null;
   currentUser?: boolean;
+  coverUrl: string;
 }
 
 export interface IMember {

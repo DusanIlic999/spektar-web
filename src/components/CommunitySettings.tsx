@@ -128,7 +128,8 @@ export const CommunitySettings = ({
                 name={"name"}
                 label={<span className="text-white">Ime Zajednice</span>}
               >
-                <Input placeholder="Ime zajednice..." />
+                <Input placeholder="Ime zajednice..." 
+                  className="dark-input"/>
               </Form.Item>
             </Col>
             <Col span={24}>
@@ -140,6 +141,7 @@ export const CommunitySettings = ({
                   rows={4}
                   style={{ resize: "none" }}
                   placeholder="Opis zajednice..."
+                  className="dark-input"
                 />
               </Form.Item>
             </Col>

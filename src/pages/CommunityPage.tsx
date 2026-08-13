@@ -95,11 +95,7 @@ export default function CommunityPage() {
 
   const canViewContent = data?.data.visibility !== "PRIVATE" || !!isMember;
 
-  const {
-    data: posts,
-    isFetching: postsIsLoading,
-    isError: postsIsError,
-  } = useQuery({
+  const { data: posts, isError: postsIsError } = useQuery({
     queryKey: ["posts", slug],
     queryFn: () => apiClient.get(`/posts/communities/${slug}/posts`),
   });
@@ -181,8 +177,6 @@ export default function CommunityPage() {
                       <div className="text-red-400">
                         Neuspelo učitavanje objava.
                       </div>
-                    ) : postsIsLoading ? (
-                      <div>Učitavanje…</div>
                     ) : (
                       <PostList posts={posts?.data ?? []} isError={false} />
                     ))}
