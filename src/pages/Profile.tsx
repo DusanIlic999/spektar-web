@@ -112,7 +112,7 @@ export default function Profile() {
           )}
         </>
         <div
-          className={`flex flex-col gap-2 w-full ${data?.data.coverUrl && "relative -top-12"}`}
+          className={`flex flex-col gap-2 w-full ${data?.data.coverUrl && "-mt-12"}`}
         >
           <div className="flex gap-10">
             {data?.data.avatarUrl && data.data.avatarUrl.length > 0 ? (
@@ -127,7 +127,7 @@ export default function Profile() {
                 <IoPersonOutline size={55} />
               </div>
             )}
-            <div className="pt-5">{data?.data.bio}</div>
+            <div className="pt-8">{data?.data.bio}</div>
           </div>
           <div className="flex flex-col lg:flex-row justify-between w-full 2xl:items-center">
             <div>

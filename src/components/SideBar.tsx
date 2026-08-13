@@ -76,7 +76,7 @@ export const SideBar = ({ mobile = false }: { mobile?: boolean }) => {
       )}
       <Link
         to={"/search"}
-        className={`relative flex gap-3 ${pathname == "/search" ? "bg-green-400/40 text-green-400" : "text-gray-400"} items-center p-3 pl-5 font-semibold`}
+        className={`relative flex gap-3 ${pathname == "/search" ? "bg-green-400/40 text-green-400" : "text-gray-400"} ${!mobile && "rounded-b-2xl"} items-center p-3 pl-5 font-semibold`}
       >
         {pathname == "/search" && (
           <div className="h-7 rounded-full bottom-1/2 translate-y-1/2 w-1 left-0 absolute bg-green-500"></div>
