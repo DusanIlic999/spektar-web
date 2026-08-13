@@ -254,7 +254,13 @@ export const CommunitySettings = ({
         <div className="flex p-3 gap-2 w-full justify-end items-end h-full">
           <button
             className="px-3 py-1 bg-red-800 border border-red-600 rounded-lg cursor-pointer"
-            onClick={handleOwnerDisband}
+            onClick={() => {
+              if (members.length === 1) {
+                deleteCommunity.mutate();
+              } else {
+                handleOwnerDisband();
+              }
+            }}
           >
             Izadji iz zajednice
           </button>

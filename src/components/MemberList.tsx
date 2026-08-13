@@ -7,17 +7,20 @@ import InviteMembers from "./InviteMembers";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../api/client";
 import { userStorage } from "../lib/userStorage";
+import type { TCommunityType } from "../types/community";
 
 export default function MemberList({
   members,
   communityId,
   communitySlug,
   isOwnerOrMod,
+  communityType,
 }: {
   members: IMember[];
   communityId: string;
   communitySlug: string;
   isOwnerOrMod: boolean;
+  communityType: TCommunityType;
 }) {
   const navigate = useNavigate();
   const { openModal, closeModal } = useModal();
@@ -97,7 +100,7 @@ export default function MemberList({
 
   return (
     <div className="space-y-5">
-      {isOwnerOrMod && (
+      {isOwnerOrMod && communityType !== "public" && (
         <div className="w-full flex flex-col lg:flex-row gap-5 justify-end">
           <button
             className="px-2 py-1 bg-amber-800 border border-amber-600 cursor-pointer rounded-lg text-nowrap"

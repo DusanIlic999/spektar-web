@@ -189,18 +189,6 @@ export const CommunityHeader = ({
                       >
                         Odjavi se
                       </button>
-                      {isOwner && (
-                        <button
-                          className="bg-red-800 border border-red-600 px-3 h-7 text-nowrap 2xl:h-10 rounded-lg cursor-pointer select-none"
-                          disabled={deletePending}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            deleteCommunity();
-                          }}
-                        >
-                          Obrisi zajednicu
-                        </button>
-                      )}
                     </>
                   ) : isRestricted && community.hasPendingJoinRequest ? (
                     <button

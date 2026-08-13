@@ -64,7 +64,7 @@ export const Posts = ({
   return (
     <div>
       <div className="flex flex-col gap-7.5">
-        {data && visiblePosts ? (
+        {data && visiblePosts.length > 0 ? (
           visiblePosts.map((post: IPost) => (
             <PostCard
               post={post}

@@ -192,6 +192,7 @@ export default function CommunityPage() {
                       communityId={data.data.id}
                       communitySlug={data.data.slug}
                       isOwnerOrMod={isOwnerOrMod}
+                      communityType={data.data.type}
                     />
                   )}
                   {currentTab === "fotografije" && (

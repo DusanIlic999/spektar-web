@@ -11,6 +11,7 @@ import type { UpVotePayload } from "../components/PostList";
 import { UserCard } from "../components/UserCard";
 import { useDebounce } from "../lib/useDebounce";
 import { useAuthStore } from "../store/authStore";
+import { PiMailboxLight } from "react-icons/pi";
 
 type TSearchFilter = "communities" | "posts" | "users";
 
@@ -142,28 +143,44 @@ export default function SearchPage() {
         </div>
       </div>
       <div className="mt-5 flex flex-col gap-4 pb-5">
-        {filter === "communities" &&
-          filteredData?.map((community) => (
-            <CommunityCard
-              community={community as ICommunity}
-              key={community.id}
-            />
-          ))}
+        {filteredData && filteredData.length > 0 ? (
+          <>
+            {filter === "communities" &&
+              filteredData?.map((community) => (
+                <CommunityCard
+                  community={community as ICommunity}
+                  key={community.id}
+                />
+              ))}
 
-        {filter === "posts" &&
-          filteredData?.map((post) => (
-            <PostCard
-              post={post as IPost}
-              key={post.id}
-              onUpvote={() => upVoteMutation.mutate({ id: post.id })}
-              onDownvote={() => downVoteMutation.mutate({ id: post.id })}
-            />
-          ))}
+            {filter === "posts" &&
+              filteredData?.map((post) => (
+                <PostCard
+                  post={post as IPost}
+                  key={post.id}
+                  onUpvote={() => upVoteMutation.mutate({ id: post.id })}
+                  onDownvote={() => downVoteMutation.mutate({ id: post.id })}
+                />
+              ))}
 
-        {filter === "users" &&
-          filteredData?.map((user) => (
-            <UserCard user={user as IUser} key={user.id} />
-          ))}
+            {filter === "users" &&
+              filteredData?.map((user) => (
+                <UserCard user={user as IUser} key={user.id} />
+              ))}
+          </>
+        ) : (
+          <>
+            <div className="w-full bg-black/80 rounded-2xl p-10 border flex flex-col items-center gap-3 border-white/15 text-center">
+              <div className="p-4 bg-gray-700/50 w-fit rounded-2xl">
+                <PiMailboxLight size="40" />
+              </div>
+              <div className="font-bold text-lg">Nema Objava</div>
+              <div className="text-sm text-gray-400">
+                Budi prvi koji ce nesto objaviti!
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
