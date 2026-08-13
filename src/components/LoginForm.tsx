@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Form, Input, Row } from "antd";
 import { toast } from "../lib/toast";
 import { apiClient } from "../api/client";
@@ -18,6 +18,7 @@ interface ILoginFormProps {
 export const LoginForm = ({ close }: ILoginFormProps) => {
   const setToken = useAuthStore((s) => s.setToken);
   const [form] = useForm();
+  const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
     mutationFn: (obj: ILogin) => apiClient.post("/auth/login", obj),
@@ -35,6 +36,7 @@ export const LoginForm = ({ close }: ILoginFormProps) => {
       toast.success("Uspesna prijava", "Uspesno ste se prijavili.");
       setToken(data.data.accessToken);
       userStorage.set(data.data.user.username);
+      queryClient.refetchQueries();
       close();
     },
     onError: () =>
@@ -65,7 +67,10 @@ export const LoginForm = ({ close }: ILoginFormProps) => {
             label={<span className="text-white">Lozinka</span>}
             name={"password"}
           >
-            <Input.Password className="w-70! 2xl:w-100!" placeholder="Lozinka..." />
+            <Input.Password
+              className="w-70! 2xl:w-100!"
+              placeholder="Lozinka..."
+            />
           </Form.Item>
         </Row>
         <Row justify={"end"} className="flex gap-5 text-white">
