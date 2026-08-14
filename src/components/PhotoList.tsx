@@ -10,7 +10,7 @@ export default function PhotoList({ photos }: { photos: IPost[] }) {
       <div className="space-y-5 w-full h-full">
         <img
           src={img}
-          className="w-full h-full max-w-2xl object-contain object-center"
+          className="w-full h-full max-h-150 max-w-2xl object-contain object-center"
         />
       </div>,
     );

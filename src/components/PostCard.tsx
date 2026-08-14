@@ -8,7 +8,6 @@ import { truncate } from "../lib/useTruncate";
 import { HiDotsVertical } from "react-icons/hi";
 import { TiDeleteOutline } from "react-icons/ti";
 import { useState } from "react";
-import { IoShareSocialOutline } from "react-icons/io5";
 import { toast } from "../lib/toast";
 import { postUrl } from "../lib/shared/urls";
 import { ShareButton } from "./ShareButton";
@@ -59,8 +58,10 @@ export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
       });
       toast.success("Uspesno ste obrisali objavu");
     },
-    onError: (err) => {
-      toast.error("Moras biti moderator ili vlasnik zajednice ili vlasnik oglasa da bi obrisao ovaj post.");
+    onError: () => {
+      toast.error(
+        "Moras biti moderator ili vlasnik zajednice ili vlasnik oglasa da bi obrisao ovaj post.",
+      );
     },
   });
 
@@ -99,7 +100,14 @@ export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
                 &middot;{" "}
                 <span
                   className="font-semibold cursor-pointer"
-                  onClick={() => navigate(`/community/${post.community.slug}`)}
+                  onClick={() => {
+                    if (
+                      !post.community.currentMember &&
+                      post.community.type === "private"
+                    )
+                      return;
+                    navigate(`/community/${post.community.slug}`);
+                  }}
                 >
                   {post.community.name}
                 </span>
@@ -119,9 +127,14 @@ export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
                   }}
                 />
               </div>
-              {/* isSettingsOpen */}
               <div
-                className={`w-40 absolute ${isSettingsOpen ? "block" : "hidden"} space-y-2 -right-47 p-2 -top-5 bg-black/80 rounded-lg select-none`}
+                className={`absolute z-75 w-screen h-screen ${isSettingsOpen ? "block" : "hidden"}`}
+                onClick={() => {
+                  setIsSettingsOpen(false);
+                }}
+              />
+              <div
+                className={`w-40 absolute ${isSettingsOpen ? "block" : "hidden"} space-y-2 right-5 2xl:-right-47 p-2 -top-5 bg-black/80 rounded-lg select-none z-80`}
               >
                 <div
                   className="flex items-center gap-2 cursor-pointer"
@@ -131,10 +144,6 @@ export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
                   Delete
                 </div>
                 <ShareButton url={postUrl(post)} title={post.title} />
-                {/* <div className="flex items-center gap-2 cursor-pointer">
-                  <IoShareSocialOutline size={"19"} />
-                  Share
-                </div> */}
               </div>
             </div>
             <div className="flex justify-between pr-2 gap-4">

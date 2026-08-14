@@ -13,11 +13,11 @@ export const FullSizeImage = ({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
       onClick={onClose}
     >
       <div
-        className={`text-white rounded-2xl overflow-y-auto border custom-scroll border-white/10 shadow-2xl max-w-80 2xl:max-w-xl w-full`}
+        className={`text-white overflow-y-auto custom-scroll shadow-2xl max-w-80 2xl:max-w-xl w-full`}
         onClick={(e) => e.stopPropagation()}
       >
         {children}

@@ -25,6 +25,7 @@ export interface IPost {
   downvoteCount: number;
   id: string;
   imageUrl: string;
+  isMember?: boolean;
   title: string;
   type: TPostType;
   updatedAt: string;

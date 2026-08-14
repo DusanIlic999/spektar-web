@@ -9,6 +9,12 @@ import { useForm } from "antd/es/form/Form";
 import { CommentForm } from "../components/CommentForm";
 import { CommentThread } from "../components/CommentThread";
 import { useComments, useCreateComment } from "../lib/useComments";
+import { TiDeleteOutline } from "react-icons/ti";
+import { ShareButton } from "../components/ShareButton";
+import { postUrl } from "../lib/shared/urls";
+import { useState } from "react";
+import { HiDotsVertical } from "react-icons/hi";
+import { toast } from "../lib/toast";
 
 export default function PostPage() {
   const { id } = useParams();
@@ -16,9 +22,34 @@ export default function PostPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const token = useAuthStore((s) => s.token);
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
   const { tree } = useComments(id!);
   const createComment = useCreateComment(id!);
+
+  const { mutate: deletePost } = useMutation({
+    mutationFn: () => apiClient.delete(`/posts/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          [
+            "posts",
+            "public-posts",
+            "search-posts",
+            "post",
+            "user",
+            "saved",
+          ].includes(query.queryKey[0] as string),
+      });
+      toast.success("Uspesno ste obrisali objavu");
+      navigate(-1);
+    },
+    onError: () => {
+      toast.error(
+        "Moras biti moderator ili vlasnik zajednice ili vlasnik oglasa da bi obrisao ovaj post.",
+      );
+    },
+  });
 
   const voteMutation = useMutation({
     mutationFn: ({ value }: { value: 1 | -1 }) =>
@@ -30,10 +61,17 @@ export default function PostPage() {
     queryFn: () => apiClient.get(`/posts/${id}`),
     queryKey: ["post", id],
   });
+
+  const isPrivateMember =
+    data?.data.isMember && data?.data.community.type === "private";
+  const isPublic = data?.data.community.type === "public" ? true : false;
+  const isRestrictedMember =
+    data?.data.isMember && data?.data.community.type === "restricted";
+
   return (
     <div className="flex flex-col 2xl:w-full text-white gap-3">
       <div
-        className="flex gap-1 items-center cursor-pointer"
+        className="flex w-fit gap-1 items-center cursor-pointer"
         onClick={() => navigate(-1)}
       >
         <FaAngleLeft />
@@ -56,11 +94,24 @@ export default function PostPage() {
               className="cursor-pointer"
             >
               {data?.data.author.displayName} &middot;{" "}
-              <span className="font-semibold">{data?.data.community.name}</span>
+              <span
+                className="font-semibold"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (
+                    !data?.data.community.currentMember &&
+                    data?.data.community.type === "private"
+                  )
+                    return;
+                  navigate(`/community/${data?.data.community.slug}`);
+                }}
+              >
+                {data?.data.community.name}
+              </span>
             </div>
           </div>
           <div>
-            <div className="flex gap-4 select-none">
+            <div className="flex relative gap-4 select-none">
               {token && (
                 <>
                   <div
@@ -82,6 +133,35 @@ export default function PostPage() {
                     </span>
                   </div>
                 </>
+              )}
+              <HiDotsVertical
+                className="cursor-pointer"
+                onClick={() => {
+                  setIsSettingsOpen((prev) => !prev);
+                }}
+              />
+              <div
+                className={`absolute z-75 w-screen h-screen ${isSettingsOpen ? "block" : "hidden"}`}
+                onClick={() => {
+                  setIsSettingsOpen(false);
+                }}
+              />
+              {data && (
+                <div
+                  className={`w-40 z-80 absolute ${isSettingsOpen ? "block" : "hidden"} space-y-2 right-5 2xl:-right-47 p-2 -top-5 bg-black/80 rounded-lg select-none`}
+                >
+                  <div
+                    className="flex items-center gap-2 cursor-pointer"
+                    onClick={() => deletePost()}
+                  >
+                    <TiDeleteOutline size={20} color="red" />
+                    Delete
+                  </div>
+                  <ShareButton
+                    url={postUrl(data.data)}
+                    title={data.data.title}
+                  />
+                </div>
               )}
             </div>
           </div>
@@ -108,31 +188,33 @@ export default function PostPage() {
           )}
         </div>
       </div>
-      <div className="p-10 space-y-5 bg-black/60 rounded-lg">
-        {token && (
-          <CommentForm
-            label="Ostavi komentar:"
-            form={commentForm}
-            loading={createComment.isPending}
-            onFinish={({ comment }) =>
-              createComment.mutate(
-                { content: comment },
-                { onSuccess: () => commentForm.resetFields() },
-              )
-            }
-          />
-        )}
+      {isPrivateMember && isPublic && isRestrictedMember && (
+        <div className="p-10 space-y-5 bg-black/60 rounded-lg">
+          {token && (
+            <CommentForm
+              label="Ostavi komentar:"
+              form={commentForm}
+              loading={createComment.isPending}
+              onFinish={({ comment }) =>
+                createComment.mutate(
+                  { content: comment },
+                  { onSuccess: () => commentForm.resetFields() },
+                )
+              }
+            />
+          )}
 
-        {tree.length > 0 ? (
-          <div className="flex flex-col gap-5 pt-5">
-            {tree.map((node) => (
-              <CommentThread key={node.id} node={node} postId={id!} />
-            ))}
-          </div>
-        ) : (
-          <p className="text-white/60">Još uvek nema komentara.</p>
-        )}
-      </div>
+          {tree.length > 0 ? (
+            <div className="flex flex-col gap-5 pt-5">
+              {tree.map((node) => (
+                <CommentThread key={node.id} node={node} postId={id!} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-white/60">Još uvek nema komentara.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

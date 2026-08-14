@@ -14,4 +14,4 @@ export const postUrl = (post: {
   title: string;
   community: { name: string };
 }) =>
-  `${BASE}/r/${post.community.name}/comments/${post.id}/${slugify(post.title)}`;
+  `${BASE}/post/${post.id}`;
