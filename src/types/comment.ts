@@ -1,4 +1,4 @@
-import type { WithChildren } from "../lib/useComments";
+import type { WithChildren } from "../lib/buildCommentTree";
 
 interface ICommentAuthor {
   avatarUrl: string;

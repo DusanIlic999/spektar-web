@@ -5,6 +5,13 @@ import { useAuthStore } from "../store/authStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../api/client";
 import { truncate } from "../lib/useTruncate";
+import { HiDotsVertical } from "react-icons/hi";
+import { TiDeleteOutline } from "react-icons/ti";
+import { useState } from "react";
+import { IoShareSocialOutline } from "react-icons/io5";
+import { toast } from "../lib/toast";
+import { postUrl } from "../lib/shared/urls";
+import { ShareButton } from "./ShareButton";
 
 interface PostCardProps {
   post: IPost;
@@ -16,6 +23,7 @@ interface PostCardProps {
 export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
   const navigate = useNavigate();
   const token = useAuthStore((s) => s.token);
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
@@ -32,6 +40,27 @@ export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
             "saved",
           ].includes(query.queryKey[0] as string),
       });
+    },
+  });
+
+  const { mutate: deletePost } = useMutation({
+    mutationFn: () => apiClient.delete(`/posts/${post.id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          [
+            "posts",
+            "public-posts",
+            "search-posts",
+            "post",
+            "user",
+            "saved",
+          ].includes(query.queryKey[0] as string),
+      });
+      toast.success("Uspesno ste obrisali objavu");
+    },
+    onError: (err) => {
+      toast.error("Moras biti moderator ili vlasnik zajednice ili vlasnik oglasa da bi obrisao ovaj post.");
     },
   });
 
@@ -55,7 +84,7 @@ export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
       >
         <div className="flex justify-between w-full flex-col gap-2">
           <div className="space-y-2 h-full">
-            <div className="flex justify-between">
+            <div className="flex justify-between relative">
               <div className="text-sm mt-1 flex items-center gap-2">
                 <img
                   src={post.author.avatarUrl ? post.author.avatarUrl : ""}
@@ -75,7 +104,7 @@ export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
                   {post.community.name}
                 </span>
               </div>
-              <div>
+              <div className="flex gap-2">
                 <FaBookmark
                   color={post.saved ? "green" : "gray"}
                   onClick={() => token && !isPending && mutate()}
@@ -83,6 +112,29 @@ export const PostCard = ({ post, onUpvote, onDownvote }: PostCardProps) => {
                     token ? "cursor-pointer" : "cursor-not-allowed opacity-50"
                   }
                 />
+                <HiDotsVertical
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setIsSettingsOpen((prev) => !prev);
+                  }}
+                />
+              </div>
+              {/* isSettingsOpen */}
+              <div
+                className={`w-40 absolute ${isSettingsOpen ? "block" : "hidden"} space-y-2 -right-47 p-2 -top-5 bg-black/80 rounded-lg select-none`}
+              >
+                <div
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => deletePost()}
+                >
+                  <TiDeleteOutline size={20} color="red" />
+                  Delete
+                </div>
+                <ShareButton url={postUrl(post)} title={post.title} />
+                {/* <div className="flex items-center gap-2 cursor-pointer">
+                  <IoShareSocialOutline size={"19"} />
+                  Share
+                </div> */}
               </div>
             </div>
             <div className="flex justify-between pr-2 gap-4">

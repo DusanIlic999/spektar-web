@@ -9,7 +9,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../api/client";
 import { toast } from "../lib/toast";
 import { useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { truncate } from "../lib/useTruncate";
 
 interface CommunityHeaderProps {
@@ -18,7 +17,6 @@ interface CommunityHeaderProps {
   onImageChange: (file: File) => void;
   handleOpenModal: () => void;
   isOwnerOrMod: boolean;
-  isOwner: boolean;
 }
 
 export const CommunityHeader = ({
@@ -27,12 +25,10 @@ export const CommunityHeader = ({
   onImageChange,
   handleOpenModal,
   isOwnerOrMod,
-  isOwner,
 }: CommunityHeaderProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const token = useAuthStore((s) => s.token);
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const isRestricted = community.type === COMMUNITYTYPE.RESTRICTED;
   const isPrivate = community.type === COMMUNITYTYPE.PRIVATE;
@@ -82,30 +78,6 @@ export const CommunityHeader = ({
       toast.error(
         "Greska tokom izlaza iz zajednice",
         "Desila se greska tokom izlaska iz zajednice, pokusajte ponovo ili pozovite administratora",
-      ),
-  });
-
-  const { mutate: deleteCommunity, isPending: deletePending } = useMutation({
-    mutationFn: () => {
-      return apiClient.delete(`/communities/${community.id}`);
-    },
-    onSuccess: () => {
-      toast.success("Zajednica obrisana", "Uspesno ste se obrisali zajednicu.");
-      queryClient.invalidateQueries({
-        queryKey: ["communities"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["my-communities"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["my-join-requests"],
-      });
-      navigate("/communities");
-    },
-    onError: () =>
-      toast.error(
-        "Greska tokom brisanja zajednice",
-        "Desila se greska tokom brisanja zajednice, pokusajte ponovo ili pozovite administratora",
       ),
   });
 

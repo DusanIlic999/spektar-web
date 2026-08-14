@@ -71,7 +71,7 @@ export const CommunityCard = ({
   const isPrivate = community.type === COMMUNITYTYPE.PRIVATE;
 
   return (
-    <div className="w-full h-[200px] bg-white/5 rounded-2xl flex gap-5 border border-white/15">
+    <div className="w-full h-50 bg-white/5 rounded-2xl flex gap-5 border border-white/15">
       {community.coverImageUrl && (
         <div
           className="relative w-3/10 hidden 2xl:block cursor-pointer"
@@ -88,11 +88,11 @@ export const CommunityCard = ({
         </div>
       )}
       <div
-        className={`flex ${community.coverImageUrl ? "2xl:w-7/10 p-5 2xl:p-2" : "w-full p-5"} capitalize`}
+        className={`flex ${community.coverImageUrl ? "w-full 2xl:w-7/10 p-5 2xl:p-2" : "w-full p-5"} capitalize`}
       >
         <div className="flex justify-between w-full flex-col">
           <div className="space-y-1 h-full">
-            <div className="flex gap-4">
+            <div className="flex flex-col 2xl:flex-row gap-1 2xl:gap-4">
               <h3
                 className="text-lg font-semibold cursor-pointer"
                 onClick={() => navigate(`/community/${community.slug}`)}

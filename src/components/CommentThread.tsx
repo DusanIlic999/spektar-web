@@ -30,7 +30,7 @@ export function CommentThread({ node, postId, depth = 0 }: Props) {
   };
 
   return (
-    <div className={depth > 0 ? "border-l border-white/20 pl-4 ml-4" : ""}>
+    <div className={depth > 0 ? "pl-4 ml-4" : ""}>
       <div className="bg-white/13 py-7 px-5 space-y-2 rounded-md">
         <div className="flex gap-5">
           <div className="flex flex-col items-center shrink-0">

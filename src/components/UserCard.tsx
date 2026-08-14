@@ -20,7 +20,6 @@ export const UserCard = ({ user }: { user: IUser }) => {
           <div>{user.displayName}</div>
           <div>@{user.username}</div>
         </div>
-        <div>{user.email}</div>
       </div>
     </div>
   );

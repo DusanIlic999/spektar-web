@@ -2,6 +2,7 @@ import { CiMenuBurger } from "react-icons/ci";
 import { CreateYourCommunity } from "./CreateYourCommunity";
 import { MyCommunity } from "./MyCommunity";
 import { SideBar } from "./SideBar";
+import { useAuthStore } from "../store/authStore";
 
 export const MobileSideBar = ({
   open,
@@ -10,6 +11,7 @@ export const MobileSideBar = ({
   open: boolean;
   toggle: () => void;
 }) => {
+  const token = useAuthStore((s) => s.token);
   return (
     <div
       className={`w-screen bg-transparent backdrop-blur-xs absolute z-90 left-0 bottom-0 h-screen overflow-hidden overflow-y-auto ${open ? "block" : "hidden"}`}
@@ -17,15 +19,19 @@ export const MobileSideBar = ({
         if (e.target === e.currentTarget) toggle();
       }}
     >
-      <div className="max-w-75 bg-black">
+      <div className="max-w-75 min-h-screen bg-black">
         <div className="flex py-3 px-2 items-center justify-between">
           <CiMenuBurger className="ml-5" onClick={toggle} />
           <h3 className="text-2xl p-2 px-3 font-semibold">Spektra</h3>
         </div>
         <div className="relative flex-col gap-3 flex">
           <SideBar mobile={true} />
-          <MyCommunity mobile={true} />
-          <CreateYourCommunity mobile={true} />
+          {token && (
+            <>
+              <MyCommunity mobile={true} />
+              <CreateYourCommunity mobile={true} />
+            </>
+          )}
         </div>
       </div>
     </div>

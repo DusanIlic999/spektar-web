@@ -108,7 +108,7 @@ export default function PostPage() {
           )}
         </div>
       </div>
-      <div className="p-10 space-y-5 bg-black/60">
+      <div className="p-10 space-y-5 bg-black/60 rounded-lg">
         {token && (
           <CommentForm
             label="Ostavi komentar:"

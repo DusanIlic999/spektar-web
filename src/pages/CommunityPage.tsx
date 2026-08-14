@@ -62,15 +62,6 @@ export default function CommunityPage() {
     }
   }, [members]);
 
-  const isOwner = useMemo(() => {
-    if (members) {
-      const isMember = members.data.find(
-        (el: any) => el.user.username === userStorage.get(),
-      );
-      return isMember && isMember.role === COMMUNITYMEMBER.OWNER;
-    }
-  }, [members]);
-
   const isMember = useMemo(() => {
     if (members) {
       const isMember = members.data.find(
@@ -152,7 +143,6 @@ export default function CommunityPage() {
               }}
               handleOpenModal={handleOpenModal}
               isOwnerOrMod={isOwnerOrMod}
-              isOwner={isOwner}
             />
             {canViewContent && (
               <>
