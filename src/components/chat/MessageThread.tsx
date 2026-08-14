@@ -65,7 +65,7 @@ export const MessageThread = ({
   };
 
   return (
-    <div className="flex flex-col bg-black/60 rounded-2xl border border-white/15 h-150 overflow-hidden">
+    <div className="w-full flex flex-col bg-black/60 rounded-2xl border border-white/15 h-150 overflow-hidden">
       <div className="p-4 border-b border-white/15 flex items-center gap-3">
         <button
           onClick={() => navigate("/chat")}
