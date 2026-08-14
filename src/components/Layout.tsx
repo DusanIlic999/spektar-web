@@ -22,7 +22,7 @@ export const Layout = () => {
       ref={scrollRef}
     >
       <Header />
-      <div className="w-full 2xl:w-350 py-5 mx-auto flex 2xl:gap-5">
+      <div className="w-full 2xl:w-350 py-5 mx-auto flex 2xl:gap-5 h-fit">
         <div className="flex-col gap-3 hidden lg:flex pl-5">
           {token && (
             <>
@@ -32,7 +32,7 @@ export const Layout = () => {
           )}
           <CreateYourCommunity />
         </div>
-        <div className="w-full p-3 pt-0">
+        <div className="w-full p-3 pt-0 h-fit">
           <Outlet />
         </div>
         <div className="hidden 2xl:block">

@@ -7,7 +7,11 @@ import { useSendMessage } from "../../lib/use-send-messages";
 import { useCurrentUser } from "../../lib/use-current-user";
 import { useTyping } from "../../lib/use-typing";
 import { useChatSocket } from "../../context/chat/socket.context.use";
-import { chatKeys, type ChatUser, type ConversationSummary } from "../../types/chat";
+import {
+  chatKeys,
+  type ChatUser,
+  type ConversationSummary,
+} from "../../types/chat";
 import { Spinner } from "../Spinner";
 
 export const MessageThread = ({
@@ -61,7 +65,7 @@ export const MessageThread = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-black/60 rounded-2xl border border-white/15 h-150 overflow-hidden">
+    <div className="flex flex-col bg-black/60 rounded-2xl border border-white/15 h-150 overflow-hidden">
       <div className="p-4 border-b border-white/15 flex items-center gap-3">
         <button
           onClick={() => navigate("/chat")}
@@ -78,7 +82,7 @@ export const MessageThread = ({
         </span>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-2">
+      <div className="h-full overflow-y-auto p-4 space-y-2">
         {hasNextPage && (
           <div className="flex justify-center pb-2">
             <button
