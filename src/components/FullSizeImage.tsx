@@ -17,7 +17,7 @@ export const FullSizeImage = ({
       onClick={onClose}
     >
       <div
-        className={`text-white overflow-y-auto custom-scroll shadow-2xl max-w-80 2xl:max-w-xl w-full`}
+        className={`text-white overflow-y-auto custom-scroll shadow-2xl max-w-80 2xl:max-w-xl w-fit`}
         onClick={(e) => e.stopPropagation()}
       >
         {children}
