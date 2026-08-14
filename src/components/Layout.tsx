@@ -5,10 +5,12 @@ import { WeatherBar } from "./WeatherBar.tsx";
 import { MyCommunity } from "./MyCommunity.tsx";
 import { CreateYourCommunity } from "./CreateYourCommunity.tsx";
 import { useEffect, useRef } from "react";
+import { useAuthStore } from "../store/authStore.ts";
 
 export const Layout = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
+  const token = useAuthStore((s) => s.token);
 
   useEffect(() => {
     scrollRef.current?.scrollTo(0, 0);
@@ -22,8 +24,12 @@ export const Layout = () => {
       <Header />
       <div className="w-full 2xl:w-350 py-5 mx-auto flex 2xl:gap-5">
         <div className="flex-col gap-3 hidden lg:flex pl-5">
-          <SideBar />
-          <MyCommunity />
+          {token && (
+            <>
+              <SideBar />
+              <MyCommunity />
+            </>
+          )}
           <CreateYourCommunity />
         </div>
         <div className="w-full p-3 pt-0">

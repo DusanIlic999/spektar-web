@@ -24,7 +24,7 @@ export const CommunitySettings = ({
   const [type, setType] = useState(community.type);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
   const currentUser = useCurrentUser();
 
   const makeOwner = useMutation({
@@ -41,6 +41,25 @@ export const CommunitySettings = ({
       toast.error(
         "Greska tokom izmene vlasnika",
         "Desila se greska tokom izmene vlasnika zajednice, proverite sa administratorom",
+      ),
+  });
+  const { mutate: disband } = useMutation({
+    mutationFn: () => {
+      return apiClient.post(`/communities/${community.id}/disband`);
+    },
+    onSuccess: () => {
+      toast.success("Vidimo se", "Uspesno ste se izasli iz zajednici.");
+      queryClient.invalidateQueries({
+        queryKey: ["community", community.slug, "full"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["members", community.slug, "full"],
+      });
+    },
+    onError: () =>
+      toast.error(
+        "Greska tokom izlaza iz zajednice",
+        "Desila se greska tokom izlaska iz zajednice, pokusajte ponovo ili pozovite administratora",
       ),
   });
 
@@ -80,15 +99,20 @@ export const CommunitySettings = ({
 
   const handleOwnerDisband = () => {
     return openModal(
-      <div>
+      <div className="w-100">
         <label htmlFor="owner">Prosledi vlastinistvo zajednice:</label>
         <select
           name="owner"
-          className="mt-2 w-full! dd"
-          onChange={(elId) => makeOwner.mutate(elId.currentTarget.value)}
+          className="mt-2 w-full! mm"
+          onChange={(elId) => {
+            makeOwner.mutate(elId.currentTarget.value);
+            disband();
+            closeModal();
+          }}
         >
+          <option value="defvalue"><div>(Izaberi naslednika zajednice)</div></option>
           {members.map((member: IMember) => {
-            if (member.id === currentUser?.id) return;
+            if (member.user.id === currentUser?.id) return null;
             return (
               <option value={member.user.id}>
                 <div>
@@ -128,8 +152,7 @@ export const CommunitySettings = ({
                 name={"name"}
                 label={<span className="text-white">Ime Zajednice</span>}
               >
-                <Input placeholder="Ime zajednice..." 
-                  className="dark-input"/>
+                <Input placeholder="Ime zajednice..." className="dark-input" />
               </Form.Item>
             </Col>
             <Col span={24}>

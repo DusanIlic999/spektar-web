@@ -35,18 +35,18 @@ export const SideBar = ({ mobile = false }: { mobile?: boolean }) => {
         <IoHomeOutline size={"19"} />
         Pocetna
       </Link>
-      <Link
-        to={"/saved"}
-        className={`relative flex gap-3 ${pathname == "/saved" ? "bg-green-400/40 text-green-400" : "text-gray-400"} items-center p-3 pl-5 font-semibold`}
-      >
-        {pathname == "/saved" && (
-          <div className="h-7 rounded-full bottom-1/2 translate-y-1/2 w-1 left-0 absolute bg-green-500"></div>
-        )}
-        <IoBookmarkOutline size={"19"} />
-        Sacuvano
-      </Link>
       {token && (
         <>
+          <Link
+            to={"/saved"}
+            className={`relative flex gap-3 ${pathname == "/saved" ? "bg-green-400/40 text-green-400" : "text-gray-400"} items-center p-3 pl-5 font-semibold`}
+          >
+            {pathname == "/saved" && (
+              <div className="h-7 rounded-full bottom-1/2 translate-y-1/2 w-1 left-0 absolute bg-green-500"></div>
+            )}
+            <IoBookmarkOutline size={"19"} />
+            Sacuvano
+          </Link>
           <Link
             to={"/notification"}
             className={`relative flex gap-3 ${pathname == "/notification" ? "bg-green-400/40 text-green-400" : "text-gray-400"} items-center p-3 pl-5 font-semibold`}

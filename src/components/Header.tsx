@@ -69,7 +69,10 @@ export const Header = () => {
             className="h-8 w-20 object-cover select-none cursor-pointer"
             onClick={() => navigate("/")}
           />
-          <div className="flex items-end gap-1 -ml-1 select-none">
+          <div
+            className="flex items-end gap-1 -ml-1 select-none cursor-pointer"
+            onClick={() => navigate("/")}
+          >
             <div className="font-extrabold hidden 2xl:block">Spektra</div>
           </div>
         </div>

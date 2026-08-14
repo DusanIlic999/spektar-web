@@ -56,9 +56,20 @@ export default function MemberList({
     },
   });
 
+  const { mutate: disbandMember, isPending: disbandMemberIsPending } =
+    useMutation({
+      mutationFn: ({ userId }: { userId: string }) =>
+        apiClient.post(`/communities/${communityId}/disband/member/${userId}`),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["members", communitySlug, "full"],
+        });
+      },
+    });
+
   const handleOpenJoinRequests = () => {
     return openModal(
-      <div className="space-y-5">
+      <div className="space-y-5 w-100">
         <div className="flex justify-between">
           <h2 className="text-2xl text-green-400">Zahtevi za pridruzivanje</h2>
           <button
@@ -76,9 +87,35 @@ export default function MemberList({
     );
   };
 
+  const handleDisbandMemberRequest = (userId: string) => {
+    return openModal(
+      <div className="space-y-5 w-65">
+        <h2>Da li ste sigurni da zelite da uklonite clana zajednice?</h2>
+        <div className="flex justify-between">
+          <button
+            className="border border-white px-2 py-1 rounded-lg cursor-pointer"
+            onClick={closeModal}
+          >
+            Nisam
+          </button>
+          <button
+            className="border border-white px-2 py-1 rounded-lg cursor-pointer"
+            onClick={() => {
+              disbandMember({ userId });
+              closeModal();
+            }}
+            disabled={disbandMemberIsPending}
+          >
+            Jesam
+          </button>
+        </div>
+      </div>,
+    );
+  };
+
   const handleOpenInviteMembers = () => {
     return openModal(
-      <div className="space-y-5">
+      <div className="space-y-5 w-100">
         <div className="flex justify-between">
           <h2>Pozovi prijatelja</h2>
           <button
@@ -95,8 +132,6 @@ export default function MemberList({
       </div>,
     );
   };
-
-  console.log("username", username);
 
   return (
     <div className="space-y-5">
@@ -177,9 +212,9 @@ export default function MemberList({
           </div>
           {username !== member.user.username && (
             <div className="flex gap-2">
-              {member.role === "mederator" && (
+              {member.role === "moderator" && isOwnerOrMod && (
                 <button
-                  className="text-xs px-3 py-1 border border-red-600 bg-red-800 rounded-lg cursor-pointer disabled:opacity-50"
+                  className="text-xs px-3 py-1 border border-amber-600 bg-amber-800 rounded-lg cursor-pointer disabled:opacity-50"
                   onClick={() =>
                     makeModerator({ userId: member.user.id, role: "member" })
                   }
@@ -205,6 +240,14 @@ export default function MemberList({
                   className="text-xs px-3 py-1 border border-green-600 bg-green-800 rounded-lg disabled:opacity-50 cursor-pointer"
                 >
                   Postavi za moderatora
+                </button>
+              )}
+              {isOwnerOrMod && member.role !== "owner" && (
+                <button
+                  className="text-xs px-3 py-1 border border-red-600 bg-red-800 rounded-lg disabled:opacity-50 cursor-pointer"
+                  onClick={() => handleDisbandMemberRequest(member.user.id)}
+                >
+                  Ukloni iz zajednice
                 </button>
               )}
             </div>
