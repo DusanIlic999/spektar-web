@@ -5,6 +5,7 @@ import { useState } from "react";
 import { toast } from "../lib/toast";
 import { apiClient } from "../api/client";
 import { useNavigate } from "react-router-dom";
+import { FaAngleLeft } from "react-icons/fa";
 
 interface ICreateCommunity {
   name: string;
@@ -41,11 +42,20 @@ export default function CreateCommunityFormPage() {
   };
 
   return (
-    <>
+    <div className="flex flex-col justify-center w-full">
+      <div
+        className="flex w-fit gap-1 items-center px-2 cursor-pointer text-white"
+        onClick={() => navigate(-1)}
+      >
+        <FaAngleLeft color="white" />
+        Back
+      </div>
       <div className="w-full flex justify-center pb-5">
-        <div className="p-3 pt-0 2xl:w-150 text-white flex flex-col items-center">
-          <h3 className="text-xl font-bold py-4 -ml-10 self-start">Kreiraj zajednicu</h3>
-          <div className="bg-black/80 2xl:w-2xl rounded-2xl border border-white/15">
+        <div className="p-3 pt-0 2xl:w-full text-white flex flex-col items-center">
+          <h3 className="text-xl font-bold p-4 px-10 -ml-10 self-start">
+            Kreiraj zajednicu
+          </h3>
+          <div className="bg-black/80 2xl:w-full rounded-2xl border border-white/15">
             <Form
               layout="vertical"
               className="!p-5"
@@ -208,6 +218,6 @@ export default function CreateCommunityFormPage() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

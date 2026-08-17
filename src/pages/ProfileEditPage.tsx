@@ -6,6 +6,7 @@ import { IoClose } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "../lib/toast";
 import { apiClient } from "../api/client";
+import { FaAngleLeft } from "react-icons/fa";
 
 export default function ProfileEditPage() {
   const { state } = useLocation();
@@ -80,115 +81,126 @@ export default function ProfileEditPage() {
   };
   if (!user) return null;
   return (
-    <div className="w-full flex flex-col items-center pb-5 p-3 pt-0">
-      <div className="2xl:w-xl text-white">
-        <h3 className="text-xl font-bold py-4">Izmeni profil</h3>
+    <div>
+      <div
+        className="flex w-fit gap-1 items-center px-2 cursor-pointer text-white"
+        onClick={() => navigate(-1)}
+      >
+        <FaAngleLeft color="white" />
+        Back
       </div>
-      <div className="bg-black/80  w-full 2xl:w-xl rounded-2xl border border-white/15">
-        <Form
-          layout="vertical"
-          className="!p-5"
-          onFinish={onFinish}
-          form={form}
-          initialValues={user}
-        >
-          <Form.Item
-            name={"displayName"}
-            label={
-              <span className="text-gray-400 font-semibold text-sm">
-                VIDLJIVO IME
-              </span>
-            }
+      <div className="w-full flex flex-col items-center pb-5 p-3 pt-0">
+        <div className="2xl:w-full text-white">
+          <h3 className="text-xl font-bold py-4">Izmeni profil</h3>
+        </div>
+        <div className="bg-black/80  w-full 2xl:w-full rounded-2xl border border-white/15">
+          <Form
+            layout="vertical"
+            className="!p-5"
+            onFinish={onFinish}
+            form={form}
+            initialValues={user}
           >
-            <Input className="dark-input" placeholder="npr. Peki Banana" />
-          </Form.Item>
-          <Form.Item
-            name={"bio"}
-            label={
-              <span className="text-gray-400 text-sm font-semibold">
-                BIOGRAFIJA
-              </span>
-            }
-          >
-            <Input.TextArea
-              className="dark-input"
-              placeholder="Biografija o tebi i tvojim interesovanjima..."
-              rows={4}
-              style={{ resize: "none" }}
-            />
-          </Form.Item>
-
-          <Form.Item
-            name={"email"}
-            label={
-              <span className="text-gray-400 font-semibold text-sm">EMAIL</span>
-            }
-          >
-            <Input
-              className="dark-input"
-              placeholder="npr. peraperic@example.com"
-            />
-          </Form.Item>
-
-          <Form.Item
-            name={"username"}
-            label={
-              <span className="text-gray-400 font-semibold text-sm">
-                USERNAME
-              </span>
-            }
-          >
-            <Input className="dark-input" placeholder="npr. PetarPera" />
-          </Form.Item>
-          <Form.Item
-            label={
-              <span className="text-gray-400 text-sm font-semibold">
-                Avatar
-              </span>
-            }
-          >
-            <div className="2xl:w-130! h-40 mt-1 bg-black/50 relative rounded-2xl">
-              <input
-                ref={inputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleChange}
-              />
-              {preview ? (
-                <div className="relative w-full">
-                  <img
-                    src={preview}
-                    alt="preview"
-                    className="w-130! h-40 relative -top-8 object-cover rounded-xl"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleRemove}
-                    className="absolute -top-10 -right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center cursor-pointer hover:bg-red-700"
-                  >
-                    <IoClose size={16} />
-                  </button>
-                </div>
-              ) : (
-                <div
-                  onClick={handleClick}
-                  className="absolute z-10 bg-gray-900/50 rounded-2xl w-full h-full top-0 backdrop-blur-[2px] select-none cursor-pointer flex items-center justify-center text-gray-200/50 font-semibold"
-                >
-                  Klikni da dodas sliku
-                </div>
-              )}
-            </div>
-          </Form.Item>
-          <Row justify={"end"} className="flex gap-5 text-white">
-            <button
-              className="px-4 py-2 bg-green-600 border border-green-400 rounded-lg cursor-pointer"
-              disabled={isPending}
+            <Form.Item
+              name={"displayName"}
+              label={
+                <span className="text-gray-400 font-semibold text-sm">
+                  VIDLJIVO IME
+                </span>
+              }
             >
-              Izmeni profil
-            </button>
-          </Row>
-        </Form>
+              <Input className="dark-input" placeholder="npr. Peki Banana" />
+            </Form.Item>
+            <Form.Item
+              name={"bio"}
+              label={
+                <span className="text-gray-400 text-sm font-semibold">
+                  BIOGRAFIJA
+                </span>
+              }
+            >
+              <Input.TextArea
+                className="dark-input"
+                placeholder="Biografija o tebi i tvojim interesovanjima..."
+                rows={4}
+                style={{ resize: "none" }}
+              />
+            </Form.Item>
+
+            <Form.Item
+              name={"email"}
+              label={
+                <span className="text-gray-400 font-semibold text-sm">
+                  EMAIL
+                </span>
+              }
+            >
+              <Input
+                className="dark-input"
+                placeholder="npr. peraperic@example.com"
+              />
+            </Form.Item>
+
+            <Form.Item
+              name={"username"}
+              label={
+                <span className="text-gray-400 font-semibold text-sm">
+                  USERNAME
+                </span>
+              }
+            >
+              <Input className="dark-input" placeholder="npr. PetarPera" />
+            </Form.Item>
+            <Form.Item
+              label={
+                <span className="text-gray-400 text-sm font-semibold">
+                  Avatar
+                </span>
+              }
+            >
+              <div className="2xl:w-full h-40 mt-1 bg-black/50 relative rounded-2xl">
+                <input
+                  ref={inputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleChange}
+                />
+                {preview ? (
+                  <div className="relative w-full">
+                    <img
+                      src={preview}
+                      alt="preview"
+                      className="w-full h-40 relative -top-8 object-cover rounded-xl"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleRemove}
+                      className="absolute -top-10 -right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center cursor-pointer hover:bg-red-700"
+                    >
+                      <IoClose size={16} />
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    onClick={handleClick}
+                    className="absolute z-10 bg-gray-900/50 rounded-2xl w-full h-full top-0 backdrop-blur-[2px] select-none cursor-pointer flex items-center justify-center text-gray-200/50 font-semibold"
+                  >
+                    Klikni da dodas sliku
+                  </div>
+                )}
+              </div>
+            </Form.Item>
+            <Row justify={"end"} className="flex gap-5 text-white">
+              <button
+                className="px-4 py-2 bg-green-600 border border-green-400 rounded-lg cursor-pointer"
+                disabled={isPending}
+              >
+                Izmeni profil
+              </button>
+            </Row>
+          </Form>
+        </div>
       </div>
     </div>
   );
