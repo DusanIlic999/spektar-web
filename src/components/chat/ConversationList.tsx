@@ -39,7 +39,7 @@ export const ConversationList = ({ activeId }: { activeId?: string }) => {
 
   const handleNewConversation = () => {
     return openModal(
-      <div className="space-y-5">
+      <div className="space-y-5 w-full min-w-60">
         <div className="flex justify-between">
           <h2>Pricaj sa prijateljima</h2>
           <button
