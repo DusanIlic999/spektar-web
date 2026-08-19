@@ -3,6 +3,7 @@ import { Form, Input, Row } from "antd";
 import { toast } from "../lib/toast";
 import { apiClient } from "../api/client";
 import { useForm } from "antd/es/form/Form";
+import OAuthButton from "./OAuth/oauth.button";
 
 interface IRegister {
   email: string;
@@ -32,7 +33,7 @@ export const RegisterForm = ({ close }: IRegisterFormProps) => {
 
   const onFinish = (obj: IRegister) => {
     mutate(obj);
-    form.resetFields()
+    form.resetFields();
   };
 
   return (
@@ -51,7 +52,10 @@ export const RegisterForm = ({ close }: IRegisterFormProps) => {
             label={<span className="text-white">Korisnicko ime</span>}
             name="username"
           >
-            <Input className="w-70! 2xl:w-100!" placeholder="Korisnicko ime..." />
+            <Input
+              className="w-70! 2xl:w-100!"
+              placeholder="Korisnicko ime..."
+            />
           </Form.Item>
         </Row>
         <Row justify={"center"}>
@@ -59,7 +63,10 @@ export const RegisterForm = ({ close }: IRegisterFormProps) => {
             label={<span className="text-white">Lozinka</span>}
             name={"password"}
           >
-            <Input.Password className="w-70! 2xl:w-100!" placeholder="Lozinka..." />
+            <Input.Password
+              className="w-70! 2xl:w-100!"
+              placeholder="Lozinka..."
+            />
           </Form.Item>
         </Row>
         <Row justify={"center"}>
@@ -67,13 +74,17 @@ export const RegisterForm = ({ close }: IRegisterFormProps) => {
             label={<span className="text-white">Prikazano ime</span>}
             name={"displayName"}
           >
-            <Input className="w-70! 2xl:w-100!" placeholder="Prikazano ime..." />
+            <Input
+              className="w-70! 2xl:w-100!"
+              placeholder="Prikazano ime..."
+            />
           </Form.Item>
         </Row>
-        <Row justify={"end"} className="flex gap-5 text-white">
-          <button className="px-3 py-2 bg-green-800/80 rounded-xl cursor-pointer select-none">
+        <Row justify={"end"} className="flex items-end gap-5 text-white">
+          <button className="w-fit h-fit px-3 py-2 bg-green-800/80 rounded-sm cursor-pointer select-none">
             Registruj se
           </button>
+          <OAuthButton />
         </Row>
       </Form>
     </div>

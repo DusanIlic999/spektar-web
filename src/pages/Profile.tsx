@@ -96,7 +96,7 @@ export default function Profile() {
             }
             className={`w-full max-h-70 ${data?.data.coverUrl ? "h-full" : "h-0"} max-h-80 rounded-2xl object-cover aspect-video`}
           />
-          {data && isCurrentUser === data.data.username && (
+          {data && isCurrentUser === data.data.username ? (
             <div
               className={`${data.data.coverUrl ? "ml-auto relative -top-10" : "ml-auto"} right-4 w-fit h-fit cursor-pointer`}
             >
@@ -109,7 +109,18 @@ export default function Profile() {
               />
               <MdOutlineImageSearch size={30} onClick={handleIconClick} />
             </div>
-          )}
+          ) : (<div
+              className={"ml-auto relative -top-10 right-4 w-fit h-fit cursor-pointer invisible"}
+            >
+              <input
+                ref={inputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleChange}
+              />
+              <MdOutlineImageSearch size={30} onClick={handleIconClick} />
+            </div>)}
         </>
         <div
           className={`flex flex-col gap-2 w-full ${data?.data.coverUrl && "-mt-12"}`}

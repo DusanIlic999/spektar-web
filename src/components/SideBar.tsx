@@ -84,7 +84,7 @@ export const SideBar = ({ mobile = false }: { mobile?: boolean }) => {
             )}
             {unreadMessages && unreadMessages.data.length > 0 && (
               <div className="absolute px-2 -scale-75 top-1 rotate-180 left-7 rounded-full text-red-500 bg-red-800">
-                {sumUnreadMessages ? sumUnreadMessages : "0"}
+                {sumUnreadMessages !== 0 && sumUnreadMessages}
               </div>
             )}
             <IoChatbubblesOutline size={"19"} />

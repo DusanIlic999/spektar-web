@@ -5,6 +5,7 @@ import { apiClient } from "../api/client";
 import { useForm } from "antd/es/form/Form";
 import { useAuthStore } from "../store/authStore";
 import { userStorage } from "../lib/userStorage";
+import OAuthButton from "./OAuth/oauth.button";
 
 interface ILogin {
   email: string;
@@ -73,10 +74,11 @@ export const LoginForm = ({ close }: ILoginFormProps) => {
             />
           </Form.Item>
         </Row>
-        <Row justify={"end"} className="flex gap-5 text-white">
+        <Row justify={"end"} className="flex gap-5 text-white items-end">
+          <OAuthButton />
           <button
             disabled={isPending}
-            className="px-3 py-2 bg-green-800/80 rounded-xl cursor-pointer select-none"
+            className="w-fit h-fit px-3 py-2 bg-green-800/80 rounded-sm cursor-pointer select-none"
           >
             Prijavi se
           </button>

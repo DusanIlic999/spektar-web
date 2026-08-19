@@ -3,6 +3,7 @@ import "./App.css";
 import { lazy, Suspense } from "react";
 import { Layout } from "./components/Layout";
 import { Fallback } from "./components/fallback/Fallback";
+import OAuthSuccess from "./pages/OAuthSuccess";
 
 const HomePage = lazy(() =>
   import("./pages").then((module) => ({ default: module.HomePage })),
@@ -66,6 +67,7 @@ function App() {
           <Route path="/profile/:username" element={<Profile />}></Route>
           <Route path="/profile/edit" element={<ProfileEditPage />}></Route>
         </Route>
+        <Route path="/oauth-success" element={<OAuthSuccess />} />
         <Route path="*" element={<Navigate to={"/"} />}></Route>
       </Routes>
     </Suspense>

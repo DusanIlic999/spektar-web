@@ -73,13 +73,15 @@ export const MessageThread = ({
         >
           <IoArrowBack size={20} />
         </button>
-        <img
-          src={otherParticipant?.avatarUrl ?? ""}
-          className="w-8 h-8 rounded-full bg-gray-600 object-cover"
-        />
-        <span className="font-semibold">
-          {otherParticipant?.username ?? "Razgovor"}
-        </span>
+        <div className="flex  gap-3 items-center cursor-pointer" onClick={()=> navigate(`/profile/${otherParticipant?.username}`)}>
+          <img
+            src={otherParticipant?.avatarUrl ?? ""}
+            className="w-8 h-8 rounded-full bg-gray-600 object-cover"
+          />
+          <span className="font-semibold">
+            {otherParticipant?.username ?? "Razgovor"}
+          </span>
+        </div>
       </div>
 
       <div className="h-full overflow-y-auto p-4 space-y-2">
