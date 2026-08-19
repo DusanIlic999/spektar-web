@@ -81,7 +81,10 @@ export const RegisterForm = ({ close }: IRegisterFormProps) => {
           </Form.Item>
         </Row>
         <Row justify={"end"} className="flex items-end gap-5 text-white">
-          <button className="w-fit h-fit px-3 py-2 bg-green-800/80 rounded-sm cursor-pointer select-none">
+          <button
+            type="submit"
+            className="w-fit h-fit px-3 py-2 bg-green-800/80 rounded-sm cursor-pointer select-none"
+          >
             Registruj se
           </button>
           <OAuthButton />

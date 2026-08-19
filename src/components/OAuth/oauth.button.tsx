@@ -6,7 +6,10 @@ export default function OAuthButton() {
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
       <button
-        onClick={handleGoogleLogin}
+        onClick={(e) => {
+          e.preventDefault();
+          handleGoogleLogin();
+        }}
         className="w-fit h-fit px-3 py-2 bg-blue-800/80 rounded-sm cursor-pointer select-none"
       >
         Prijavi se preko Google-a

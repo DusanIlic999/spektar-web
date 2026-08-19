@@ -75,13 +75,14 @@ export const LoginForm = ({ close }: ILoginFormProps) => {
           </Form.Item>
         </Row>
         <Row justify={"end"} className="flex gap-5 text-white items-end">
-          <OAuthButton />
           <button
+            type="submit"
             disabled={isPending}
             className="w-fit h-fit px-3 py-2 bg-green-800/80 rounded-sm cursor-pointer select-none"
           >
             Prijavi se
           </button>
+          <OAuthButton />
         </Row>
       </Form>
     </div>
